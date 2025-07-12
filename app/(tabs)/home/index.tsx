@@ -6,6 +6,7 @@ import { ScrollView, Text, View } from 'react-native';
 
 // import { BarChart } from "react-native-gifted-charts";
 import HorizontalBarChart from '@/components/home/HorizontalBarChart';
+import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const barData = [{ value: 15 }, { value: 30 }, { value: 26 }, { value: 40 }];
@@ -13,16 +14,17 @@ const barData = [{ value: 15 }, { value: 30 }, { value: 26 }, { value: 40 }];
 const home = () => {
   const safeArea = useSafeAreaInsets()
   const { subscriptions, getSubscriptions } = useHome()
+  const {width: screenWidth} = useWindowDimensions()
 
   return (
     <ScrollView className='flex-1' style={{ paddingTop: safeArea.top, backgroundColor: "#101323" }}>
 
-      <View className='mt-5 px-5'>
+      <View className='mt-5 px-5' >
         <Text className='text-text text-2xl font-bold'>Resumen</Text>
 
-        <View className='flex-row flex-wrap justify-between'>
-          <ShownCard title="Active Subscriptions" value="4" className="w-[48%]" />
-          <ShownCard title="Total Spent This Month" value="$124" className="w-[48%]" />
+        <View className='flex-row items-center justify-between gap-4'>
+          <ShownCard title="Active Subscriptions" value="4"  />
+          <ShownCard title="Total Spent This Month" value="$45.96"  />
         </View>
       </View>
 
