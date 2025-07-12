@@ -1,3 +1,4 @@
+import { daysRamain } from '@/helpers/formatDay';
 import { FormatPrice } from '@/helpers/formatPrice';
 import { BillingCycle, Category } from '@/interface/subscription.interface';
 import { Ionicons } from '@expo/vector-icons';
@@ -48,15 +49,16 @@ const CardList = ({ title, subtitle, className, nextPaymentDate, category, billi
           <Text className="text-xl font-medium leading-normal text-text">{title}</Text>
         </View>
 
+        <Text className='text-sm font-normal leading-normal text-[#c4cbe6]'>{billingCycle}</Text>
+        
         {/* Fecha de próxima factura */}
         <View className='flex-row items-center gap-2 mt-1'>
           <View className="flex-row items-center">
             <View className="flex-row items-center gap-2">
-              <Ionicons name="calendar-outline" size={16} color="white" />
+              <Ionicons name="calendar-outline" size={12} color="white" />
               <Text className='text-sm font-normal leading-normal text-[#c4cbe6]'>
-                {nextPaymentDate}
+                <AccentText label={daysRamain(nextPaymentDate) > 0 ? `${daysRamain(nextPaymentDate)} days remaining` : ''}/> 
               </Text>
-              <AccentText label={billingCycle} />
             </View>
           </View>
         </View>
