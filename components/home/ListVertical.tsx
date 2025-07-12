@@ -1,6 +1,6 @@
 import { Subscription } from '@/interface/subscription.interface';
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import CardList from './CardList';
 
 interface Props {
@@ -10,11 +10,10 @@ interface Props {
 const ListVertical = ({subscriptions}: Props) => {
   return (
     <View className="mt-4">
-      <FlatList
-        nestedScrollEnabled 
-        data={subscriptions}
-        renderItem={({ item }) => (
+      <View className='flex-col gap-y-1'>
+        {subscriptions.map((item) => (
           <CardList
+            key={item.id}
             title={item.name}
             subtitle={item.price}
             category={item.category}
@@ -22,10 +21,8 @@ const ListVertical = ({subscriptions}: Props) => {
             nextPaymentDate={item.nextPaymentDate}
             className=""
           />
-        )}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <View className="h-1" />} 
-      />
+        ))}
+      </View>
     </View>
   );
 };
