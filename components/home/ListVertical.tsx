@@ -13,6 +13,7 @@ const ListVertical = ({subscriptions}: Props) => {
       <View className='flex-col gap-y-1'>
         {subscriptions.map((item) => (
           <CardList
+            id={item.id}
             key={item.id}
             title={item.name}
             subtitle={item.price}

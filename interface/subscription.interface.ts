@@ -4,7 +4,7 @@ export interface Subscription {
     price: number;
     description: string;
     category: Category;
-    nextPaymentDate: string;
+    nextPaymentDate: Date;
     status: string;
     billingCycle: BillingCycle;
 }

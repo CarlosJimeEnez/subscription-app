@@ -15,9 +15,17 @@ const useHome = () => {
         setSubscriptions(subscriptionsDb)
     }
 
+    const getSubscriptionById = (id: string) => {
+        return subscriptionsDb.find((item) => item.id === id) 
+    }
+
     const getActiveSubscription = (activeSubscriptionList: number[]) => {
         setActiveSubscription(activeSubscriptionList.length)
         return activeSubscription
+    }
+
+    const addSubscription = (subscription: Subscription) => {
+        setSubscriptions([...subscriptions, subscription])
     }
 
     return {
@@ -25,7 +33,9 @@ const useHome = () => {
         subscriptions,
         
         getSubscriptions,
-        getActiveSubscription
+        getActiveSubscription, 
+        getSubscriptionById,
+        addSubscription
     }
 }
 

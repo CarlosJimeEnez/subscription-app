@@ -17,11 +17,16 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider >
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
-    </Stack>
-    <StatusBar style="auto" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade_from_bottom'
+        }}>
+        <Stack.Screen name="(tabs)" />
+        {/* <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} /> */}
+        <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
+      </Stack>
+      <StatusBar style="auto" />
     </SafeAreaProvider>
   );
 
