@@ -1,5 +1,4 @@
-export const formatDay = (paymentDate: string) => {
-    const date = new Date(paymentDate)
+export const formatDay = (date: Date) => {
     return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',

@@ -20,12 +20,11 @@ const home = () => {
   return (
     <View className='flex-1' style={{ paddingTop: safeArea.top, backgroundColor: "#101323" }}>
       <ScrollView>
-        <View className='mt-5 px-5' >
+        <View className='mt-5 px-5 flex-1 '>
           <Text className='text-text text-2xl font-bold'>Resumen</Text>
-
-          <View className='flex-row items-center justify-between gap-4'>
-            <ShownCard title="Active Subscriptions" value="4" />
-            <ShownCard title="Total Spent This Month" value="$45.96" />
+          <View className='flex-row flex-1 items-center justify-between gap-4 '>
+            <ShownCard title="Active Subscriptions" className='h-full' value="4" />
+            <ShownCard title="Total Spent This Month" className='h-full' value="$45.96" />
           </View>
         </View>
 

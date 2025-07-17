@@ -12,18 +12,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const SubscriptionDetail = () => {
     const safeArea = useSafeAreaInsets()
-    const {id} = useLocalSearchParams<{id: string}>()
-    const {getSubscriptionById} = useHome()
+    const { id } = useLocalSearchParams<{ id: string }>()
+    const { getSubscriptionById } = useHome()
     const subscription = getSubscriptionById(id)
-    
+
     if (!subscription) {
         return <Text>Subscription not found</Text>;
     }
 
     const getIconName = getCategoryIcon(subscription.category)
     return (
-        <View className="flex-1 bg-[#101323]">
-            <ScrollView style={{ paddingTop: safeArea.top }}>
+        <View className="flex-1 bg-[#101323] pb-6">
+            <ScrollView style={{ paddingTop: safeArea.top, marginBottom: safeArea.bottom }}>
                 {/* Custom Header */}
                 <View className="flex-row items-center p-4 pb-2 justify-between">
                     <Pressable onPress={() => router.back()} className="flex size-12 shrink-0 items-center justify-center -ml-4">
@@ -34,32 +34,35 @@ const SubscriptionDetail = () => {
                 </View>
 
                 {/* Main Content */}
-                <View className="p-4">
+                <View className="px-4 py-3">
                     <View className="flex flex-col items-stretch justify-start rounded-xl">
                         <View className="w-full aspect-video rounded-xl bg-[#21284a] items-center justify-center">
                             <Ionicons name={getIconName} size={64} color="white" />
                         </View>
+
                         <View className="flex w-full grow flex-col items-stretch justify-center gap-1 py-4">
-                            <Text className="text-white text-lg font-bold">{subscription.name}</Text>
+                            <Text className="text-text mt-2 text-2xl font-bold">{subscription.name}</Text>
                             <View className="flex-col gap-1">
                                 <View className='flex-row items-center justify-between gap-2'>
-                                <AccentText label={subscription.billingCycle} />
-                                {/* <Text className="text-[#8e99cc] text-base font-normal">{subscription.billingCycle}</Text> */}
-                                <Text className="text-text text-2xl font-normal">{FormatPrice.format(subscription.price)}</Text>
+                                    <AccentText label={subscription.billingCycle} />
+                                    {/* <Text className="text-[#8e99cc] text-base font-normal">{subscription.billingCycle}</Text> */}
+                                    <Text className="text-text text-2xl font-normal">{FormatPrice.format(subscription.price)}</Text>
                                 </View>
                                 <Text className="text-[#8e99cc] text-base font-normal">Next payment: {formatDay(subscription.nextPaymentDate)}</Text>
                             </View>
                         </View>
                     </View>
                 </View>
-
+                
+                {/* Status */}
+                <DetailRow label="Status" className='px-7  border border-gray-700 rounded-xl mx-6 flex-row items-center justify-between' isBadge={true} value={subscription.status} />
+                
                 {/* Details Section */}
-                <View className="px-4">
+                <View className="px-4 border border-gray-700 rounded-xl mx-6 mt-3">
                     <Text className="text-white text-lg font-bold pb-2 pt-4">Details</Text>
-                    <DetailRow label="Category" value={subscription.category} />
-                    <DetailRow label="Billing Cycle" value={subscription.billingCycle} />
-                    <DetailRow label="Status" value={subscription.status} />
-                    <DetailRow label="Notes" value={subscription.description || 'No notes'} />
+                    <DetailRow label="Category" value={subscription.category} className=' border-t border-t-[#2f396a]' />
+                    <DetailRow label="Billing Cycle" value={subscription.billingCycle} className=' border-t border-t-[#2f396a]'/>
+                    <DetailRow label="Notes" value={subscription.description || 'No notes'} className=' border-t border-t-[#2f396a]' />
                 </View>
 
             </ScrollView>

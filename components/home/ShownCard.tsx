@@ -18,9 +18,14 @@ const ShownCard = ({ title, value, className, iconName }: Props) => {
         </View> : null
       }
       <View className={`flex-1 ml-3 ${iconName ? "ml-3" : ""}`} >
-        <Text className="text-text font-medium text-base">{title}</Text>
+        {title == "Active Subscriptions"
+          ?
+          <Text className="text-text font-medium text-xl">{title}</Text>
+          :
+          <Text className="text-text font-medium text-lg">{title}</Text>
+        }
+        {/* <Text className="text-text font-medium text-base">{title}</Text> */}
         <Text className="mt-2 text-4xl font-bold text-text">{value}</Text>
-
       </View>
     </View>
   )
