@@ -9,7 +9,7 @@ interface Props {
 
 const FAB = ({clasName}: Props) => {
     return (
-        <Pressable onPress={() => router.push("/subscription/add")} className='absolute bottom-5 right-5 z-50 bg-[#3A3F51] rounded-full p-5'>
+        <Pressable onPress={() => router.push("/subscription/add")} className='absolute bottom-5 right-5 z-50 bg-[#177e55] rounded-full p-5'>
             <AntDesign name="plus" size={24} color="white" />
         </Pressable>
     )

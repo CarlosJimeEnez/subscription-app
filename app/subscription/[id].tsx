@@ -1,4 +1,4 @@
-import AccentText from '@/components/home/AccentText';
+import AccentText from '@/components/shared/AccentText';
 import DetailRow from '@/components/subscriptionDetail/DetailRow';
 import { formatDay } from '@/helpers/formatDay';
 import { FormatPrice } from '@/helpers/formatPrice';

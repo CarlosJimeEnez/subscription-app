@@ -19,10 +19,11 @@ const ListVertical = ({subscriptions}: Props) => {
             subtitle={item.price}
             category={item.category}
             billingCycle={item.billingCycle}
-            nextPaymentDate={item.nextPaymentDate}
+            nextPaymentDate={item.nextPaymentDate.toISOString()}
             className=""
           />
         ))}
+        
       </View>
     </View>
   );

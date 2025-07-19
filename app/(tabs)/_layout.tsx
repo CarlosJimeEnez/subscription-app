@@ -10,6 +10,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: '#fff',
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -24,7 +25,14 @@ export default function TabLayout() {
         name="home/index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Ionicons name="home" size={28} color={color} />,
+          tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="subscriptions/index"
+        options={{
+          title: 'Subscriptions',
+          tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => <Ionicons name={focused ? 'receipt' : 'receipt-outline'} size={24} color={color} />,
         }}
       />
     </Tabs>

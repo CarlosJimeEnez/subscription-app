@@ -20,7 +20,8 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: 'fade_from_bottom'
+          animation: 'fade_from_bottom',
+          contentStyle: { backgroundColor: '#101323' }
         }}>
         <Stack.Screen name="(tabs)" />
         {/* <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} /> */}
