@@ -4,7 +4,7 @@ import { FilterOption } from "../interface/filters.interface";
 const options: FilterOption[] = [
     { id: 'All', label: 'All' },
     { id: 'Active', label: 'Active', icon: 'checkmark-circle' },
-    { id: 'Inactive', label: 'Inactive', icon: 'close-circle' },
+    { id: 'Cancelled', label: 'Cancelled', icon: 'close-circle' },
     { id: 'Monthly', label: 'Monthly', icon: 'calendar' },
     { id: 'Yearly', label: 'Yearly', icon: 'calendar' },
 ]

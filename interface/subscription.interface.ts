@@ -1,4 +1,4 @@
-export type Status = "Active" | "Inactive";
+export type Status = "Active" | "Cancelled";
 export type BillingCycle = "Monthly" | "Yearly";
 export type Category = "Music" | "Entertainment" | "Services" | "Productivity" | "Gaming" | "Other"; 
 
