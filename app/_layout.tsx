@@ -1,8 +1,10 @@
+import { ThemeProvider } from '@shopify/restyle';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import theme from '../constants/theme';
 import "../global.css";
 
 export default function RootLayout() {
@@ -16,19 +18,22 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider >
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: 'fade_from_bottom',
-          contentStyle: { backgroundColor: '#101323' }
-        }}>
-        <Stack.Screen name="(tabs)" />
-        {/* <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} /> */}
-        <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </SafeAreaProvider>
+    <ThemeProvider theme={theme}>
+      <SafeAreaProvider>
+        <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: 'fade_from_bottom',
+              contentStyle: { backgroundColor: theme.colors.background }
+            }}>
+            <Stack.Screen name="(tabs)" />
+            {/* <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} /> */}
+            <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
+          </Stack>
+          <StatusBar style="light" />
+        </View>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
-
 }

@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import AccentText from '../shared/AccentText';
+import AccentText from './AccentText';
 
 interface CardListProps {
   id: string;

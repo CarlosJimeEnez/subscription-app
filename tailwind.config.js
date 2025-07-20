@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-import Colors from "./constants/Colors";
+import { Colors } from "./constants/Colors";
 
 module.exports = {
   // NOTE: Update this to include the paths to all files that contain Nativewind classes.
@@ -9,22 +9,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        light: {
-          primary: Colors.light.primary,
-          secondary: Colors.light.secondary,
-          background: Colors.light.background,
-          text: Colors.light.text,
-          tertiary: Colors.light.tertiary,
-          success: Colors.light.success,
-        },
-        dark: {
-          primary: Colors.dark.primary,
-          secondary: Colors.dark.secondary,
-          background: Colors.dark.background,
-          text: Colors.dark.text,
-          tertiary: Colors.dark.tertiary,
-          success: Colors.dark.success,
-        }
+        primary: Colors.primary,
+        secondary: Colors.secondary,
+        background: Colors.background,
+        text: Colors.text,
+        tertiary: Colors.tertiary,
+        success: Colors.success,
+        muted: Colors.muted,
+        accent: Colors.accent
       },
     },
   },

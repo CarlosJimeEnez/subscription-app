@@ -1,5 +1,5 @@
-import ListVertical from '@/components/home/ListVertical';
 import ShownCard from '@/components/home/ShownCard';
+import ListVertical from '@/components/shared/ListVertical';
 import useHome from '@/hooks/useSubscriptions';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
@@ -7,15 +7,11 @@ import { ScrollView, Text, View } from 'react-native';
 // import { BarChart } from "react-native-gifted-charts";
 import FAB from '@/components/home/FAB';
 import HorizontalBarChart from '@/components/home/HorizontalBarChart';
-import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-const barData = [{ value: 15 }, { value: 30 }, { value: 26 }, { value: 40 }];
 
 const home = () => {
   const safeArea = useSafeAreaInsets()
-  const { subscriptions, getSubscriptions } = useHome()
-  const { width: screenWidth } = useWindowDimensions()
+  const { subscriptions } = useHome()
 
   return (
     <View className='flex-1' style={{ paddingTop: safeArea.top, backgroundColor: "#101323" }}>

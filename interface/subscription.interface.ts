@@ -1,3 +1,7 @@
+export type Status = "Active" | "Inactive";
+export type BillingCycle = "Monthly" | "Yearly";
+export type Category = "Music" | "Entertainment" | "Services" | "Productivity" | "Gaming" | "Other"; 
+
 export interface Subscription {
     id: string;
     name: string;
@@ -5,8 +9,6 @@ export interface Subscription {
     description: string;
     category: Category;
     nextPaymentDate: Date;
-    status: string;
+    status: Status;
     billingCycle: BillingCycle;
 }
-export type BillingCycle = "Monthly" | "Yearly";
-export type Category = "Music" | "Entertainment" | "Services" | "Productivity" | "Gaming" | "Other";

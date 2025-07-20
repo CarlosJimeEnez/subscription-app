@@ -1,0 +1,1 @@
+export type FilterCategory = "All" | "Active" | "Inactive" | "Monthly" | "Yearly";

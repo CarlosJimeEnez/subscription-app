@@ -28,6 +28,27 @@ const useHome = () => {
         setSubscriptions([...subscriptions, subscription])
     }
 
+    const filterSubscriptions = (filter: string) => {
+        console.log(filter)
+        if(filter === 'All') {
+            return subscriptions
+        }
+        else if(filter === 'Active') {
+            return subscriptions.filter((item) => item.status === 'Active')
+        }
+        else if(filter === 'Inactive') {
+            return subscriptions.filter((item) => item.status === 'Inactive')
+        }
+        else if(filter === 'Monthly') {
+            return subscriptions.filter((item) => item.billingCycle === 'Monthly')
+        }
+        else if(filter === 'Yearly') {
+            return subscriptions.filter((item) => item.billingCycle === 'Yearly')
+        }
+
+        return subscriptions
+    }
+
     return {
         activeSubscription,
         subscriptions,
@@ -35,7 +56,8 @@ const useHome = () => {
         getSubscriptions,
         getActiveSubscription, 
         getSubscriptionById,
-        addSubscription
+        addSubscription,
+        filterSubscriptions
     }
 }
 
