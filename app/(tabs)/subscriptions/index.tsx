@@ -12,7 +12,7 @@ const SubscriptionsView = () => {
     const safeArea = useSafeAreaInsets()
     const [searchText, setSearchText] = useState('')
     const { subscriptions, filterSubscriptions } = useSubscriptions()
-    const { options, selectedFilter, setSelectedFilter } = useFilters()
+    const { options, selectedFilter, setLocalSelectedFilter } = useFilters()
     
     const filteredSubscriptions = filterSubscriptions(selectedFilter)
     return (
@@ -32,7 +32,7 @@ const SubscriptionsView = () => {
             </View>
             
             {/* Filtro */}
-            <Filter setSelectedFilter={setSelectedFilter}/>
+            <Filter setSelectedFilter={setLocalSelectedFilter}/>
            
            {/* Lista de suscripciones */}
            <View className="px-6 py-1 pb-6 border border-gray-700 rounded-xl mx-6">

@@ -12,7 +12,7 @@ interface FilterProps {
  * Componente de filtro con opciones seleccionables y scroll horizontal
  */
 const Filter = ({ className, setSelectedFilter }: FilterProps) => {
-  const { filterOptions, options, selectedFilter } = useFilters()
+  const { filterOptions, options, selectedFilter, setLocalSelectedFilter } = useFilters()
   return (
     <View className={`mb-4 ${className}`}>
       <ScrollView
@@ -27,6 +27,7 @@ const Filter = ({ className, setSelectedFilter }: FilterProps) => {
             onPress={() => {
               if (setSelectedFilter) {
                 setSelectedFilter(option.id);
+                setLocalSelectedFilter(option.id)
               }
             }}
             className={`px-5 py-3 rounded-xl mr-3 flex-row items-center ${selectedFilter === option.id

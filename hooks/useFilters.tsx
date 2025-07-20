@@ -11,7 +11,7 @@ const options: FilterOption[] = [
 
 export const useFilters = () => {
     const [filterOptions, setFilterOptions] = useState([])
-    const [selectedFilter, setSelectedFilter] = useState<string>("All")
+    const [selectedFilter, setLocalSelectedFilter] = useState<string>("All")
 
 
     return {
@@ -19,7 +19,7 @@ export const useFilters = () => {
         selectedFilter,
         filterOptions,
 
-        setSelectedFilter,
+        setLocalSelectedFilter,
         setFilterOptions
     }
 }
