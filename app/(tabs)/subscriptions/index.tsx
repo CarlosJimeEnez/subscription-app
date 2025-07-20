@@ -43,7 +43,7 @@ const SubscriptionsView = () => {
             <Filter setSelectedFilter={setLocalSelectedFilter}/>
            
            {/* Lista de suscripciones */}
-           <View className="px-6 py-1 pb-6 border border-gray-700 rounded-xl mx-6">
+           <View className="px-3 py-1 pb-6 border border-gray-700 rounded-xl mx-6">
             <Text className="text-text mt-6  text-2xl font-bold">Lista de suscripciones ({filteredSubscriptions.length})</Text>
             
             <ListVertical subscriptions={filteredSubscriptions}  />
