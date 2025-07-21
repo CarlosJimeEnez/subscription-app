@@ -30,8 +30,9 @@ export default function RootLayout() {
               animation: 'fade_from_bottom',
               contentStyle: { backgroundColor: theme.colors.background }
             }}>
+            <Stack.Screen name="(auth)" />
             <Stack.Screen name="(tabs)" />
-            {/* <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} /> */}
+            <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} />
             <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
           </Stack>
           <StatusBar style="light" />

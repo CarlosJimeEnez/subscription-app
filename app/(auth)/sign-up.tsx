@@ -2,8 +2,10 @@ import { useSignUp } from '@clerk/clerk-expo'
 import { Link, useRouter } from 'expo-router'
 import * as React from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function SignUpScreen() {
+  const safeArea = useSafeAreaInsets()
   const { isLoaded, signUp, setActive } = useSignUp()
   const router = useRouter()
 
@@ -65,46 +67,81 @@ export default function SignUpScreen() {
 
   if (pendingVerification) {
     return (
-      <>
-        <Text>Verify your email</Text>
-        <TextInput
-          value={code}
-          placeholder="Enter your verification code"
-          onChangeText={(code) => setCode(code)}
-        />
-        <TouchableOpacity onPress={onVerifyPress}>
-          <Text>Verify</Text>
-        </TouchableOpacity>
-      </>
+      <View className='flex-1 p-6 bg-background' style={{ paddingTop: safeArea.top + 20 }}>
+        <View className="mt-8 mb-10">
+          <Text className='text-white text-3xl font-bold mb-2'>Verificación</Text>
+          <Text className='text-gray-400'>Ingresa el código que te enviamos por email</Text>
+        </View>
+        
+        <View className="space-y-7">
+          <View>
+            <Text className="text-white text-base mb-2">Código</Text>
+            <TextInput
+              className='bg-[#1C1F30] h-16 rounded-xl text-white p-5'
+              placeholderTextColor="#6B7280"
+              value={code}
+              placeholder="Ingresa el código de verificación"
+              onChangeText={(code) => setCode(code)}
+            />
+          </View>
+          
+          <TouchableOpacity 
+            className="bg-[#3461FD] h-16 rounded-2xl items-center justify-center mt-7"
+            onPress={onVerifyPress}>
+            <Text className='text-white text-lg font-semibold'>Verificar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     )
   }
 
   return (
-    <View>
-      <>
-        <Text>Sign up</Text>
-        <TextInput
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Enter email"
-          onChangeText={(email) => setEmailAddress(email)}
-        />
-        <TextInput
-          value={password}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <TouchableOpacity onPress={onSignUpPress}>
-          <Text>Continue</Text>
+    <View className='flex-1 p-6 bg-background' style={{ paddingTop: safeArea.top + 20 }}>
+      <View className="mt-8 mb-10">
+        <Text className='text-white text-3xl font-bold mb-2'>Regístrate</Text>
+        <Text className='text-gray-400'>Crea una cuenta nueva para continuar</Text>
+      </View>
+      
+      <View className="space-y-7">
+        <View>
+          <Text className="text-white text-base mb-2">Email</Text>
+          <TextInput
+            className='bg-[#1C1F30] h-16 rounded-xl text-white p-5'
+            placeholderTextColor="#6B7280"
+            autoCapitalize="none"
+            value={emailAddress}
+            placeholder="Ingresa tu email"
+            onChangeText={(email) => setEmailAddress(email)}
+          />
+        </View>
+        
+        <View>
+          <Text className="text-white text-base mb-2">Contraseña</Text>
+          <TextInput
+            className='bg-[#1C1F30] h-16 rounded-xl text-white p-5'
+            placeholderTextColor="#6B7280"
+            value={password}
+            placeholder="Crea una contraseña segura"
+            secureTextEntry={true}
+            onChangeText={(password) => setPassword(password)}
+          />
+        </View>
+        
+        <TouchableOpacity 
+          className="bg-[#3461FD] h-16 rounded-2xl items-center justify-center mt-7"
+          onPress={onSignUpPress}>
+          <Text className='text-white text-lg font-semibold'>Continuar</Text>
         </TouchableOpacity>
-        <View style={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
-          <Text>Already have an account?</Text>
-          <Link href="/sign-in">
-            <Text>Sign in</Text>
+        
+        <View className="flex-row justify-center mt-7">
+          <Text className="text-gray-400 mr-2">¿Ya tienes una cuenta? </Text>
+          <Link href="/(auth)/sign-in" asChild>
+            <TouchableOpacity>
+              <Text className="text-[#3461FD]">Inicia sesión</Text>
+            </TouchableOpacity>
           </Link>
         </View>
-      </>
+      </View>
     </View>
   )
 }
