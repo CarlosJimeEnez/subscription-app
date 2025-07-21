@@ -1,18 +1,42 @@
-import { useSignUp } from '@clerk/clerk-expo'
+import { useOAuth, useSignUp } from '@clerk/clerk-expo'
 import { Link, useRouter } from 'expo-router'
 import * as React from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function SignUpScreen() {
   const safeArea = useSafeAreaInsets()
-  const { isLoaded, signUp, setActive } = useSignUp()
+  const { isLoaded, signUp, setActive: setSignUpActive } = useSignUp()
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" })
   const router = useRouter()
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState(false)
 
   const [emailAddress, setEmailAddress] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [pendingVerification, setPendingVerification] = React.useState(false)
   const [code, setCode] = React.useState('')
+
+  // Handle Google Sign Up
+  const onGoogleSignUp = React.useCallback(async () => {
+    try {
+      if (!startOAuthFlow) {
+        console.error('OAuth flow not initialized');
+        return;
+      }
+      
+      setIsGoogleLoading(true);
+      const result = await startOAuthFlow();
+      
+      if (result && result.createdSessionId && setSignUpActive) {
+        await setSignUpActive({ session: result.createdSessionId });
+        router.replace('/');
+      }
+    } catch (err) {
+      console.error("OAuth error:", err);
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  }, [startOAuthFlow, setSignUpActive, router]);
 
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
@@ -50,8 +74,8 @@ export default function SignUpScreen() {
 
       // If verification was completed, set the session to active
       // and redirect the user
-      if (signUpAttempt.status === 'complete') {
-        await setActive({ session: signUpAttempt.createdSessionId })
+      if (signUpAttempt.status === 'complete' && setSignUpActive) {
+        await setSignUpActive({ session: signUpAttempt.createdSessionId })
         router.replace('/')
       } else {
         // If the status is not complete, check why. User may need to
@@ -131,6 +155,30 @@ export default function SignUpScreen() {
           className="bg-[#3461FD] h-16 rounded-2xl items-center justify-center mt-7"
           onPress={onSignUpPress}>
           <Text className='text-white text-lg font-semibold'>Continuar</Text>
+        </TouchableOpacity>
+        
+        <View className="flex-row items-center my-5">
+          <View className="flex-1 h-0.5 bg-[#1C1F30]" />
+          <Text className="mx-4 text-gray-400">O continuar con</Text>
+          <View className="flex-1 h-0.5 bg-[#1C1F30]" />
+        </View>
+        
+        <TouchableOpacity 
+          className="h-16 rounded-2xl border border-gray-700 flex-row items-center justify-center px-4"
+          onPress={onGoogleSignUp}
+          disabled={isGoogleLoading}>
+          {isGoogleLoading ? (
+            <ActivityIndicator color="#3461FD" />
+          ) : (
+            <>
+              <Image 
+                source={{ uri: 'https://developers.google.com/identity/images/g-logo.png' }}
+                style={{ width: 24, height: 24 }}
+                resizeMode="contain"
+              />
+              <Text className="text-white text-base ml-3">Continuar con Google</Text>
+            </>
+          )}
         </TouchableOpacity>
         
         <View className="flex-row justify-center mt-7">

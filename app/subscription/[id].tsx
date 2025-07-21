@@ -5,7 +5,7 @@ import { FormatPrice } from '@/helpers/formatPrice';
 import { getCategoryIcon } from '@/helpers/getCategoryIcon';
 import useHome from '@/hooks/useSubscriptions';
 import { Ionicons } from '@expo/vector-icons';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,9 +26,6 @@ const SubscriptionDetail = () => {
             <ScrollView style={{ paddingTop: safeArea.top, marginBottom: safeArea.bottom }}>
                 {/* Custom Header */}
                 <View className="flex-row items-center p-4 pb-2 justify-between">
-                    <Pressable onPress={() => router.back()} className="flex size-12 shrink-0 items-center justify-center -ml-4">
-                        <Ionicons name="arrow-back" size={24} color="white" />
-                    </Pressable>
                     <Text className="text-white text-lg font-bold flex-1 text-center">{subscription.name} Details</Text>
                     <View className="size-8" />{/* Spacer */}
                 </View>

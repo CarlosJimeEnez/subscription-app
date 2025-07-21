@@ -21,12 +21,12 @@ const Index = () => {
 
   // If authenticated, redirect to home
   return (
-    // <View className='flex-1 bg-[#101323]' style={{ paddingTop: top }}>
-    //   <Redirect href="/(tabs)/home" />
-    // </View>
     <View>
       <SignedIn>
+        <View className='flex-1 bg-[#101323]' style={{ paddingTop: top }}>
         <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
+          <Redirect href="/(tabs)/home" />
+        </View>
         <SignOutButton />
       </SignedIn>
       <SignedOut>
