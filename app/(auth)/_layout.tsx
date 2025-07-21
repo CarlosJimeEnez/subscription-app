@@ -1,12 +1,26 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import { useAuth } from '@clerk/clerk-expo'
+import { Redirect, Stack } from 'expo-router'
 
-const AuthLayout = () => {
+export default function AuthRoutesLayout() {
+  const { isSignedIn, isLoaded } = useAuth()
+
+  // Wait for auth to be loaded
+  if (!isLoaded) {
+    return null;
+  }
+
+  // If user is signed in, redirect to home page
+  if (isSignedIn) {
+    return <Redirect href={'/'} />
+  }
+
+  // Otherwise, allow access to auth screens
   return (
-    <View>
-      <Text>AuthLayout</Text>
-    </View>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: '#101323' }
+      }}
+    />
   )
 }
-
-export default AuthLayout

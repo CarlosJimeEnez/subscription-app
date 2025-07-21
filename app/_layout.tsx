@@ -1,3 +1,5 @@
+import { ClerkProvider } from '@clerk/clerk-expo';
+import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { ThemeProvider } from '@shopify/restyle';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -18,6 +20,7 @@ export default function RootLayout() {
   }
 
   return (
+    <ClerkProvider tokenCache={tokenCache}>
     <ThemeProvider theme={theme}>
       <SafeAreaProvider>
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -35,5 +38,6 @@ export default function RootLayout() {
         </View>
       </SafeAreaProvider>
     </ThemeProvider>
+  </ClerkProvider>
   );
 }
