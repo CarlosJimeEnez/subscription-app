@@ -1,22 +1,32 @@
-import ShownCard from '@/components/home/ShownCard';
-import ListVertical from '@/components/shared/ListVertical';
-import useHome from '@/hooks/useSubscriptions';
-import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
-
-// import { BarChart } from "react-native-gifted-charts";
 import FAB from '@/components/home/FAB';
 import HorizontalBarChart from '@/components/home/HorizontalBarChart';
+import ShownCard from '@/components/home/ShownCard';
+import UserGreeting from '@/components/home/UserGreeting';
+import ListVertical from '@/components/shared/ListVertical';
+import useHome from '@/hooks/useSubscriptions';
+import { Bell } from 'lucide-react-native';
+import React from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const home = () => {
   const safeArea = useSafeAreaInsets()
   const { subscriptions } = useHome()
 
+
   return (
-    <View className='flex-1' style={{ paddingTop: safeArea.top, backgroundColor: "#101323" }}>
+    <View className='flex-1' style={{ paddingTop: safeArea.top + 20, backgroundColor: "#101323" }}>
       <ScrollView>
         <View className='mt-5 px-5 flex-1 '>
+          <View className='flex-row items-center justify-between pb-4'>
+            <UserGreeting />
+            <View>
+              {/* {Alert Button} */}
+              <TouchableOpacity>
+                <Bell size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
           <Text className='text-text text-2xl font-bold'>Resumen</Text>
           <View className='flex-row flex-1 items-center justify-between gap-4 '>
             <ShownCard title="Active Subscriptions" className='h-full' value="4" />
