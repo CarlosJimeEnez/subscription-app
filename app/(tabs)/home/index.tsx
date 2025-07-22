@@ -40,7 +40,13 @@ const home = () => {
         {/* List Vertical de Upcoming Bills */}
         <View className='mt-9 m-6 p-3 pb-6 border border-gray-700  rounded-xl'>
           <Text className='text-text text-2xl font-bold mt-3 '>Upcoming Bills (5)</Text>
-          <ListVertical subscriptions={subscriptions} />
+          {
+            subscriptions.length != 0 ? (
+              <ListVertical subscriptions={subscriptions} />
+            ) : (
+              <Text className='text-text text-2xl font-bold mt-3 '>No upcoming bills</Text>
+            )
+          }
         </View>
       </ScrollView>
       <FAB />
