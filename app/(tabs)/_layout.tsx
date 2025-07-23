@@ -29,9 +29,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="chat/index"
+        options={{
+          title: 'Chat', 
+          tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => <Ionicons name={focused ? 'chatbubble' : 'chatbubble-outline'} size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="subscriptions/index"
         options={{
-          title: 'Subscriptions',
+          title: 'Subscriptions', 
           tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => <Ionicons name={focused ? 'receipt' : 'receipt-outline'} size={24} color={color} />,
         }}
       />
