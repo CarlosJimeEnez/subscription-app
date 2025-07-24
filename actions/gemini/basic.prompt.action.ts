@@ -1,6 +1,6 @@
 import geminiApi from "../gemini.api"
 
-export const basicPrompt = async (prompt: string) => {
+export const actionBasicPrompt = async (prompt: string): Promise<string> => {
     try {
         const response = await geminiApi.post("/basic-prompt", {
             prompt: prompt
