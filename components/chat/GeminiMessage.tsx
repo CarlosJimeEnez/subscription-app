@@ -8,7 +8,7 @@ interface Props {
 
 const GeminiMessage = ({ msg }: Props) => {
     return (
-        <View key={`gemini-${msg.id}`} className="bg-gray-800 self-start rounded-lg p-3 mb-3 max-w-xs">
+        <View className="bg-gray-800 self-start rounded-lg p-3 mb-3 max-w-xs">
             <Text className="text-white">{msg.text}</Text>
         </View>
     )
