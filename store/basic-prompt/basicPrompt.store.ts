@@ -6,9 +6,11 @@ import { create } from "zustand";
 interface BasicPromptStore {
     geminiWriting: boolean; 
     messages: Message[];
+    conversationId: string; 
 
-    addMessage: (message: string) => void;
+    addMessage: (message: string) => Promise<void>;
     setGeminiWriting: (geminiWriting: boolean) => void;
+    setConversationId: (conversationId: string) => void;
 }
 
 const createMessage = (text: string, sender: 'user' | 'gemini'):Message => {
@@ -25,29 +27,40 @@ export const useBasicPromptStore = create<BasicPromptStore>((set) => ({
   // State 
   geminiWriting: false,
   messages: [],
+  conversationId: "",
 
   // Actions
   addMessage: async (text: string) =>  {
     const userMessage = createMessage(text, 'user');
+    const { conversationId } = useBasicPromptStore.getState();
     
     set( state => ({
       geminiWriting: true,
       messages: [...state.messages, userMessage]
-    }))
+    }));
 
-    // TODO: Call Gemini API
-    const geminiResponseText = await actionBasicPrompt(text);
-    // Se crea otro mensaje para la respuesta de Gemini
-    const geminiMessage = createMessage(geminiResponseText, 'gemini');
-    
-    set(state => ({
-      geminiWriting: false,
-      messages: [...state.messages, geminiMessage]
-    }))
+    try {
+      // Ya no necesitamos pasar el token
+      const geminiResponseText = await actionBasicPrompt(text, conversationId);
+      // Se crea otro mensaje para la respuesta de Gemini
+      const geminiMessage = createMessage(geminiResponseText, 'gemini');
+      
+      set(state => ({
+        geminiWriting: false,
+        messages: [...state.messages, geminiMessage]
+      }));
+    } catch (error) {
+      console.error('Error al obtener respuesta de Gemini:', error);
+      set({ geminiWriting: false });
+      // Opcionalmente, podrías añadir un mensaje de error al chat
+    }
   },
 
   setGeminiWriting: (isWriting: boolean) => {
     set({geminiWriting: isWriting })
   },
-  
+
+  setConversationId: (conversationId: string) => {
+    set({conversationId})
+  }
 }))

@@ -2,22 +2,36 @@ import AnimacionPensando from '@/components/chat/AnimacionPensando';
 import GeminiMessage from '@/components/chat/GeminiMessage';
 import NuevoChat from '@/components/chat/NuevoChat';
 import UserMessage from '@/components/chat/UserMessage';
+import useChat from '@/hooks/useChat';
 import { useBasicPromptStore } from '@/store/basic-prompt/basicPrompt.store';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import uuid from 'react-native-uuid';
 
 const ChatScreen = () => {
     const [text, setText] = useState('');
     const [textInputHeight, setTextInputHeight] = useState(40); // Altura inicial del TextInput
+
     const messages = useBasicPromptStore((state) => state.messages);
-    const addMessage = useBasicPromptStore((state) => state.addMessage)
-    const geminiWriting = useBasicPromptStore((state) => state.geminiWriting)
+    const addMessage = useBasicPromptStore((state) => state.addMessage);
+    const geminiWriting = useBasicPromptStore((state) => state.geminiWriting);
+    const setConversationId = useBasicPromptStore((state) => state.setConversationId);
+    const conversationId = useBasicPromptStore((state) => state.conversationId);
+    const { isAuthenticated } = useChat(); // Ahora solo necesitamos saber si está autenticado
     const top = useSafeAreaInsets().top;
 
     // Referencia para el ScrollView
     const scrollViewRef = useRef<ScrollView>(null);
+
+    // Este useEffect ya maneja correctamente la inicialización del UUID
+    useEffect(() => {
+        // Generar un ID global para toda la sesión de chat
+        const globalConversationId = uuid.v4().toString();
+        setConversationId(globalConversationId);
+        console.log('ID de conversación inicializado:', globalConversationId);
+    }, []);
 
     // Función para hacer scroll al final
     const scrollToBottom = () => {
@@ -49,17 +63,17 @@ const ChatScreen = () => {
     }, []);
 
     const handleSendMessage = async () => {
-        if (text === '') return
+        if (text === '' || !isAuthenticated) return;
 
         try {
-            await addMessage(text.trim())
-            setText('')
+            await addMessage(text.trim()); // Ya no necesitamos pasar el token
+            setText('');
             // Pequeño delay para asegurar que el mensaje se renderice antes de scroll
-            setTimeout(() => scrollToBottom(), 100)
+            setTimeout(() => scrollToBottom(), 100);
         } catch (error) {
-            console.error('Error al enviar mensaje:', error)
+            console.error('Error al enviar mensaje:', error);
         }
-    }
+    };
 
     return (
         <SafeAreaView className="flex-1 bg-gray-900 " style={{ paddingTop: top }} edges={['bottom', 'left', 'right']}>
