@@ -1,7 +1,8 @@
+import { t, translateField } from '@/helpers/formatLanguaje'
 import { Message } from '@/interface/message.interface'
-import React, { JSX } from 'react'
-import { Text, View } from 'react-native'
-import { t, translateField, translateSubscriptionData } from '@/helpers/formatLanguaje'
+import React from 'react'
+import { View } from 'react-native'
+import Markdown from 'react-native-markdown-display'
 
 interface Props {
     msg: Message
@@ -15,11 +16,7 @@ const parseMessage = (msg: Message): string => {
         
         // Extraer el texto de la propiedad "response"
         if (parsedMsg.response) {
-            // Verificar si la respuesta contiene JSON anidado
-            const responseText = parsedMsg.response
-            
-            // Es texto markdown normal
-            return responseText
+            return parsedMsg.response
         }
         
         // Si no tiene "response", devolver el texto original
@@ -29,52 +26,6 @@ const parseMessage = (msg: Message): string => {
         console.log('Error parseando mensaje:', error)
         return msg.text
     }
-}
-
-// Función para renderizar listas de puntos
-const renderBulletList = (text: string) => {
-    const lines = text.split('\n')
-    const elements: JSX.Element[] = []
-    let currentText = ''
-    
-    lines.forEach((line, index) => {
-        if (line.trim().startsWith('*')) {
-            // Si hay texto acumulado antes del punto, agregarlo
-            if (currentText.trim()) {
-                elements.push(
-                    <Text key={`text-${index}`} className="text-white text-sm leading-5 mb-3">
-                        {currentText.trim()}
-                    </Text>
-                )
-                currentText = ''
-            }
-            
-            // Agregar el punto de la lista
-            const bulletText = line.replace(/^\s*\*\s*/, '').trim()
-            // Limpiar formato markdown (**texto**)
-            const cleanBulletText = bulletText.replace(/\*\*(.*?)\*\*/g, '$1')
-            elements.push(
-                <View key={`bullet-${index}`} className="flex-row items-start mb-2">
-                    <Text className="text-blue-400 text-sm mr-2">•</Text>
-                    <Text className="text-white text-sm leading-5 flex-1">{cleanBulletText}</Text>
-                </View>
-            )
-        } else {
-            // Acumular texto normal
-            currentText += line + '\n'
-        }
-    })
-    
-    // Agregar cualquier texto restante
-    if (currentText.trim()) {
-        elements.push(
-            <Text key="final-text" className="text-white text-sm leading-5 mt-3">
-                {currentText.trim()}
-            </Text>
-        )
-    }
-    
-    return elements
 }
 
 const parseSubscriptionResponse = (text: string) => {
@@ -90,41 +41,166 @@ const parseSubscriptionResponse = (text: string) => {
     }
 };
 
+// Estilos personalizados para el componente Markdown
+const markdownStyles = {
+    body: {
+        color: '#ffffff',
+        fontSize: 14,
+        lineHeight: 20,
+    },
+    heading1: {
+        color: '#ffffff',
+        fontSize: 20,
+        fontWeight: '700' as const, // Cambiado de 'bold'
+        marginBottom: 8,
+    },
+    heading2: {
+        color: '#ffffff',
+        fontSize: 18,
+        fontWeight: '700' as const, // Cambiado de 'bold'
+        marginBottom: 6,
+    },
+    heading3: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: '700' as const, // Cambiado de 'bold'
+        marginBottom: 4,
+    },
+    paragraph: {
+        color: '#ffffff',
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: 12,
+    },
+    list_item: {
+        color: '#ffffff',
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: 4,
+    },
+    bullet_list: {
+        marginBottom: 8,
+    },
+    ordered_list: {
+        marginBottom: 8,
+    },
+    bullet_list_icon: {
+        color: '#60a5fa', // blue-400
+        fontSize: 14,
+        marginRight: 8,
+    },
+    strong: {
+        color: '#ffffff',
+        fontWeight: '700' as const, // Cambiado de 'bold'
+    },
+    em: {
+        color: '#ffffff',
+        fontStyle: 'italic' as const,
+    },
+    code_inline: {
+        backgroundColor: '#374151', // gray-700
+        color: '#f3f4f6', // gray-100
+        paddingHorizontal: 4,
+        paddingVertical: 2,
+        borderRadius: 4,
+        fontSize: 13,
+    },
+    fence: {
+        backgroundColor: '#374151', // gray-700
+        color: '#f3f4f6', // gray-100
+        padding: 12,
+        borderRadius: 8,
+        marginVertical: 8,
+    },
+    blockquote: {
+        backgroundColor: '#374151', // gray-700
+        borderLeftWidth: 4,
+        borderLeftColor: '#60a5fa', // blue-400
+        paddingLeft: 12,
+        paddingVertical: 8,
+        marginVertical: 8,
+    },
+    link: {
+        color: '#60a5fa', // blue-400
+        textDecorationLine: 'underline' as const,
+    },
+};
+
+// Estilos específicos para mensajes de error (texto ámbar)
+const errorMarkdownStyles = {
+    ...markdownStyles,
+    body: {
+        ...markdownStyles.body,
+        color: '#f59e0b', // amber-500
+    },
+    paragraph: {
+        ...markdownStyles.paragraph,
+        color: '#f59e0b', // amber-500
+    },
+    list_item: {
+        ...markdownStyles.list_item,
+        color: '#f59e0b', // amber-500
+    },
+};
+
+// Estilos específicos para datos actuales (texto verde)
+const successMarkdownStyles = {
+    ...markdownStyles,
+    body: {
+        ...markdownStyles.body,
+        color: '#10b981', // green-500
+    },
+    paragraph: {
+        ...markdownStyles.paragraph,
+        color: '#10b981', // green-500
+    },
+    list_item: {
+        ...markdownStyles.list_item,
+        color: '#10b981', // green-500
+    },
+};
+
 const GeminiMessage = ({ msg }: Props) => {
     const messageText = parseMessage(msg);
     const subscriptionData = parseSubscriptionResponse(messageText);
-
     // Caso 1: Respuesta de suscripción (éxito o fallo)
     if (subscriptionData) {
         // Caso 1.1: Faltan campos
         if (subscriptionData.success === false) {
+            // Crear contenido markdown para campos faltantes
+            let missingFieldsMarkdown = '';
+            if (subscriptionData.missing_fields?.length > 0) {
+                missingFieldsMarkdown = `\n\n**${t('missingFields')}:**\n`;
+                subscriptionData.missing_fields.forEach((field: string) => {
+                    missingFieldsMarkdown += `• ${translateField(field)}\n`;
+                });
+            }
+
+            // Crear contenido markdown para datos actuales
+            let currentDataMarkdown = '';
+            if (subscriptionData.current_data && Object.keys(subscriptionData.current_data).length > 0) {
+                currentDataMarkdown = `\n\n**${t('currentData')}:**\n`;
+                Object.entries(subscriptionData.current_data).forEach(([key, value]) => {
+                    currentDataMarkdown += `• ${translateField(key)}: ${translateField(String(value))}\n`;
+                });
+            }
+
             return (
                 <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
-                    <Text className="text-white text-md leading-5 font-semibold">{t('incompleteInfo')}</Text>
-                    <Text className="text-white text-md leading-5">
-                        {subscriptionData.message}
-                    </Text>
+                    <Markdown style={markdownStyles}>
+                        {`**${t('incompleteInfo')}**\n\n${subscriptionData.message}`}
+                    </Markdown>
 
-                    {subscriptionData.missing_fields?.length > 0 && (
-                        <View className="mb-4">
-                            <Text className="text-white text-md leading-5 font-bold mt-2">{t('missingFields')}</Text>
-                            <View className="text-white text-md leading-5">
-                                {subscriptionData.missing_fields.map((field: string, index: number) => (
-                                    <Text key={index} className="text-amber-400 text-md">• {translateField(field)}</Text>
-                                ))}
-                            </View>
-                        </View>
+                    {missingFieldsMarkdown && (
+                        <Markdown style={errorMarkdownStyles}>
+                            {missingFieldsMarkdown}
+                        </Markdown>
                     )}
 
-                    {subscriptionData.current_data && Object.keys(subscriptionData.current_data).length > 0 && (
-                        <View>
-                            <Text className="text-white text-md leading-5 font-bold mt-2">{t('currentData')}:</Text>
-                            <View className="mt-2">
-                                {Object.entries(subscriptionData.current_data).map(([key, value]) => (
-                                    <Text key={key} className="text-green-400 text-md">• {translateField(key)}: {translateField(String(value))}</Text>
-                                ))}
-                            </View>
-                        </View>
+                    {currentDataMarkdown && (
+                        <Markdown style={successMarkdownStyles}>
+                            {currentDataMarkdown}
+                        </Markdown>
                     )}
                 </View>
             );
@@ -133,38 +209,30 @@ const GeminiMessage = ({ msg }: Props) => {
         // Caso 1.2: Suscripción creada con éxito
         if (subscriptionData.success === true) {
             const { name, price, category, billingCycle } = subscriptionData.subscription;
+            const successMarkdown = `✅ **${t('subscriptionRegistered')}**\n\n**${name}**\n\n**$${price}**\n\n*${translateField(category)} • ${translateField(billingCycle)}*`;
+            
             return (
                 <View className="bg-green-50 border border-green-200 self-start rounded-lg p-6 mb-7 max-w-sm">
-                    <Text className="text-green-800 font-bold text-base mb-2">✅ {t('subscriptionRegistered')}</Text>
-                    <View className="bg-white rounded-md p-4 mt-2 border border-green-100">
-                        <Text className="text-lg font-bold text-gray-800">{name}</Text>
-                        <Text className="text-2xl font-extrabold text-green-600 mt-1">${price}</Text>
-                        <Text className="text-sm text-gray-500 capitalize mt-2">{translateField(category)} • {translateField(billingCycle)}</Text>
-                    </View>
+                    <Markdown style={{
+                        ...markdownStyles,
+                        body: { ...markdownStyles.body, color: '#065f46' }, // green-800
+                        paragraph: { ...markdownStyles.paragraph, color: '#065f46' },
+                        strong: { ...markdownStyles.strong, color: '#065f46' },
+                        em: { ...markdownStyles.em, color: '#6b7280' }, // gray-500
+                    }}>
+                        {successMarkdown}
+                    </Markdown>
                 </View>
             );
         }
     }
 
-    // Caso 2: Mensaje de bienvenida con lista
-    const hasFinancialServices = messageText.includes(t('financialAnalysis')) || 
-                                messageText.includes(t('subscriptionManagement')) || 
-                                messageText.includes(t('financialExtraction')) ||
-                                messageText.includes('Análisis de gastos') || // Fallback para compatibilidad
-                                messageText.includes('Gestión de suscripciones') ||
-                                messageText.includes('Extracción de información financiera');
-    if (hasFinancialServices) {
-        return (
-            <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
-                {renderBulletList(messageText)}
-            </View>
-        );
-    }
-
-    // Caso 3: Mensaje de texto normal
+    // Caso 2 y 3: Mensajes normales - Usar Markdown
     return (
         <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
-            <Text className="text-white text-sm leading-5">{messageText}</Text>
+            <Markdown style={markdownStyles}>
+                {messageText}
+            </Markdown>
         </View>
     );
 }
