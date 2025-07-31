@@ -1,4 +1,3 @@
-import { t, translateField } from '@/helpers/formatLanguaje'
 import { Message } from '@/interface/message.interface'
 import React from 'react'
 import { View } from 'react-native'
@@ -28,18 +27,18 @@ const parseMessage = (msg: Message): string => {
     }
 }
 
-const parseSubscriptionResponse = (text: string) => {
-    try {
-        const match = text.match(/```json\n([\s\S]*?)\n```/);
-        if (match && match[1]) {
-            return JSON.parse(match[1]);
-        }
-        return false; // No hay JSON válido
-    } catch (error) {
-        console.log('Error parseando JSON de suscripción:', error);
-        return false; // Error al parsear
-    }
-};
+// const parseSubscriptionResponse = (text: string) => {
+//     try {
+//         const match = text.match(/```json\n([\s\S]*?)\n```/);
+//         if (match && match[1]) {
+//             return JSON.parse(match[1]);
+//         }
+//         return false; // No hay JSON válido
+//     } catch (error) {
+//         console.log('Error parseando JSON de suscripción:', error);
+//         return false; // Error al parsear
+//     }
+// };
 
 // Estilos personalizados para el componente Markdown
 const markdownStyles = {
@@ -162,71 +161,6 @@ const successMarkdownStyles = {
 
 const GeminiMessage = ({ msg }: Props) => {
     const messageText = parseMessage(msg);
-    const subscriptionData = parseSubscriptionResponse(messageText);
-    // Caso 1: Respuesta de suscripción (éxito o fallo)
-    if (subscriptionData) {
-        // Caso 1.1: Faltan campos
-        if (subscriptionData.success === false) {
-            // Crear contenido markdown para campos faltantes
-            let missingFieldsMarkdown = '';
-            if (subscriptionData.missing_fields?.length > 0) {
-                missingFieldsMarkdown = `\n\n**${t('missingFields')}:**\n`;
-                subscriptionData.missing_fields.forEach((field: string) => {
-                    missingFieldsMarkdown += `• ${translateField(field)}\n`;
-                });
-            }
-
-            // Crear contenido markdown para datos actuales
-            let currentDataMarkdown = '';
-            if (subscriptionData.current_data && Object.keys(subscriptionData.current_data).length > 0) {
-                currentDataMarkdown = `\n\n**${t('currentData')}:**\n`;
-                Object.entries(subscriptionData.current_data).forEach(([key, value]) => {
-                    currentDataMarkdown += `• ${translateField(key)}: ${translateField(String(value))}\n`;
-                });
-            }
-
-            return (
-                <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
-                    <Markdown style={markdownStyles}>
-                        {`**${t('incompleteInfo')}**\n\n${subscriptionData.message}`}
-                    </Markdown>
-
-                    {missingFieldsMarkdown && (
-                        <Markdown style={errorMarkdownStyles}>
-                            {missingFieldsMarkdown}
-                        </Markdown>
-                    )}
-
-                    {currentDataMarkdown && (
-                        <Markdown style={successMarkdownStyles}>
-                            {currentDataMarkdown}
-                        </Markdown>
-                    )}
-                </View>
-            );
-        }
-
-        // Caso 1.2: Suscripción creada con éxito
-        if (subscriptionData.success === true) {
-            const { name, price, category, billingCycle } = subscriptionData.subscription;
-            const successMarkdown = `✅ **${t('subscriptionRegistered')}**\n\n**${name}**\n\n**$${price}**\n\n*${translateField(category)} • ${translateField(billingCycle)}*`;
-            
-            return (
-                <View className="bg-green-50 border border-green-200 self-start rounded-lg p-6 mb-7 max-w-sm">
-                    <Markdown style={{
-                        ...markdownStyles,
-                        body: { ...markdownStyles.body, color: '#065f46' }, // green-800
-                        paragraph: { ...markdownStyles.paragraph, color: '#065f46' },
-                        strong: { ...markdownStyles.strong, color: '#065f46' },
-                        em: { ...markdownStyles.em, color: '#6b7280' }, // gray-500
-                    }}>
-                        {successMarkdown}
-                    </Markdown>
-                </View>
-            );
-        }
-    }
-
     // Caso 2 y 3: Mensajes normales - Usar Markdown
     return (
         <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
