@@ -17,6 +17,8 @@ const ChatScreen = () => {
     const messages = useBasicPromptStore((state) => state.messages);
     const addMessage = useBasicPromptStore((state) => state.addMessage);
     const geminiWriting = useBasicPromptStore((state) => state.geminiWriting);
+    const lastResponseType = useBasicPromptStore((state) => state.lastResponseType);
+    const lastResponseSuccess = useBasicPromptStore((state) => state.lastResponseSuccess);
     const setConversationId = useBasicPromptStore((state) => state.setConversationId);
     const conversationId = useBasicPromptStore((state) => state.conversationId);
     const { isAuthenticated } = useChat(); // Ahora solo necesitamos saber si está autenticado
@@ -102,15 +104,27 @@ const ChatScreen = () => {
                     showsVerticalScrollIndicator={true}
                 >
                     {/* Chat Messages */}
-                    {
-                        messages.length > 0 ? (
-                            messages.map((msg, index) => (
-                                msg.sender === 'user' ? (
-                                    <UserMessage key={`user-${msg.id}`} msg={msg} />) : (<GeminiMessage key={`gemini-${msg.id}`} msg={msg} />)))
-                        ) : (
-                            <NuevoChat />
-                        )
-                    }
+                    {messages.length > 0 ? (
+                        messages.map((msg, index) => (
+                            msg.sender === 'user' ? (
+                                <UserMessage key={`user-${msg.id}`} msg={msg} />
+                            ) : (
+                                <GeminiMessage key={`gemini-${msg.id}`} msg={msg} />
+                            )
+                        ))
+                    ) : (
+                        <NuevoChat />
+                    )}
+                    
+                    {/* Opcional: Mostrar indicador del estado de la última respuesta */}
+                    {lastResponseType && (
+                        <View className="px-4 py-2">
+                            <Text className="text-gray-400 text-xs text-center">
+                                Última respuesta: {lastResponseType} {lastResponseSuccess ? '✅' : '❌'}
+                            </Text>
+                        </View>
+                    )}
+                    
                     {geminiWriting && (
                         <AnimacionPensando text="Pensando..." />
                     )}
