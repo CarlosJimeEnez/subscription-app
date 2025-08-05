@@ -16,9 +16,6 @@ export const setupAuthInterceptor = (axiosInstance: AxiosInstance, getTokenFn: (
         console.log('Token obtenido:', token ? 'Token válido' : 'Token nulo');
         // Añadir más información para depuración
         if (token) {
-          console.log('Token primeros 10 caracteres:', token.substring(0, 10) + '...');
-          console.log('URL de la solicitud:', config.url);
-          console.log(token)
           config.headers['Authorization'] = `Bearer ${token}`;
         }
       } catch (error) {

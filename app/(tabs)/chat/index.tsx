@@ -32,7 +32,6 @@ const ChatScreen = () => {
         // Generar un ID global para toda la sesión de chat
         const globalConversationId = uuid.v4().toString();
         setConversationId(globalConversationId);
-        console.log('ID de conversación inicializado:', globalConversationId);
     }, []);
 
     // Función para hacer scroll al final
