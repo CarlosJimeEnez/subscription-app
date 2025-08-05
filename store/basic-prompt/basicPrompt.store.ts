@@ -1,5 +1,5 @@
 import { actionBasicPrompt } from "@/actions/gemini/basic.prompt.action";
-import { GeminiResponse, Message } from "@/interface/message.interface";
+import { GeminiResponse, GeminiResponseMarkdown, Message } from "@/interface/message.interface";
 import uuid from 'react-native-uuid';
 import { create } from "zustand";
 
@@ -20,14 +20,13 @@ interface BasicPromptStore {
     setConversationId: (conversationId: string) => void;
 }
 
-const createMessage = (text: string, sender: 'user' | 'gemini', geminiResponse?: GeminiResponse): ExtendedMessage => {
+const createMessage = (text: string, sender: 'user' | 'gemini', geminiResponse?: GeminiResponseMarkdown): ExtendedMessage => {
     return {
         id: uuid.v4(),
         text: text,
         createdAt: new Date(),
         sender: sender,
         type: "text",
-        geminiResponse: geminiResponse
     }
 }
 
@@ -36,8 +35,7 @@ export const useBasicPromptStore = create<BasicPromptStore>((set) => ({
   geminiWriting: false,
   messages: [],
   conversationId: "",
-  lastResponseType: undefined,
-  lastResponseSuccess: undefined,
+  lastResponseSuccess: false,
 
   // Actions
   addMessage: async (text: string) =>  {
@@ -50,15 +48,14 @@ export const useBasicPromptStore = create<BasicPromptStore>((set) => ({
     }));
 
     try {
-      const geminiResponse: GeminiResponse = await actionBasicPrompt(text, conversationId);
+      const geminiResponse: GeminiResponseMarkdown = await actionBasicPrompt(text, conversationId);
       // Crear mensaje con la respuesta completa
-      const geminiMessage = createMessage(geminiResponse.message, 'gemini', geminiResponse);
+      const geminiMessage = createMessage(geminiResponse.result, 'gemini');
       
       set(state => ({
         geminiWriting: false,
         messages: [...state.messages, geminiMessage],
-        lastResponseType: geminiResponse.type,
-        lastResponseSuccess: geminiResponse.success
+        lastResponseSuccess: true
       }));
     } catch (error) {
       console.error('Error al obtener respuesta de Gemini:', error);

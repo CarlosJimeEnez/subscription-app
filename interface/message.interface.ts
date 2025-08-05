@@ -1,11 +1,11 @@
 import { Subscription } from "./subscription.interface";
 
 export interface Message {
-    id: string;
-    text: string;
-    createdAt: Date;
-    sender: 'user' | 'gemini';
-    type: string;
+  id: string;
+  text: string;
+  createdAt: Date;
+  sender: 'user' | 'gemini';
+  type: string;
 }
 
 export interface BaseResponse {
@@ -68,9 +68,13 @@ export interface ErrorResponse extends BaseResponse {
 }
 
 // Union type for all possible responses
-export type GeminiResponse = 
-  | GreetingResponse 
-  | SubscriptionSuccessResponse 
-  | SubscriptionErrorResponse 
-  | GeneralResponse 
+export type GeminiResponse =
+  | GreetingResponse
+  | SubscriptionSuccessResponse
+  | SubscriptionErrorResponse
+  | GeneralResponse
   | ErrorResponse;
+
+export type GeminiResponseMarkdown = {
+  result: string;
+}
