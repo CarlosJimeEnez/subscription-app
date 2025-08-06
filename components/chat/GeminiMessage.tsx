@@ -1,20 +1,8 @@
-import { GeminiResponse } from '@/interface/message.interface';
+import { Message } from '@/interface/message.interface';
 import React from 'react';
 import { View } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
-interface ExtendedMessage {
-    id: string;
-    text: string;
-    createdAt: Date;
-    sender: 'user' | 'gemini';
-    type: string;
-    geminiResponse?: GeminiResponse;
-}
-
-interface Props {
-    msg: ExtendedMessage
-}
 
 // Estilos base para Markdown
 const baseMarkdownStyles = {
@@ -72,20 +60,19 @@ const greetingStyles = {
     paragraph: { ...baseMarkdownStyles.paragraph, color: '#60a5fa' },
 };
 
-const GeminiMessage = ({ msg }: Props) => {
-    console.log('msg', msg);
+interface GeminiMessageProps {
+    msg: Message;
+}
 
-    
+const GeminiMessage: React.FC<GeminiMessageProps> = ({ msg }) => {
+    console.log('mensaje desde gemini', msg);
     // Si no hay información de respuesta, mostrar mensaje normal
-    if (!msg.geminiResponse) {
-        return (
-            <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
-                <Markdown style={baseMarkdownStyles}>
-                    {msg.text}
-                </Markdown>
-            </View>
-        );
-    }
+    return (
+        <View>
+            <Markdown style={baseMarkdownStyles}>{msg.text}</Markdown>
+        </View>
+    )
+
 };
 
-export default GeminiMessage
+export default GeminiMessage;

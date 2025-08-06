@@ -1,16 +1,13 @@
 import { actionBasicPrompt } from "@/actions/gemini/basic.prompt.action";
-import { GeminiResponse, GeminiResponseMarkdown, Message } from "@/interface/message.interface";
+import { Message } from "@/interface/message.interface";
 import uuid from 'react-native-uuid';
 import { create } from "zustand";
 
-// Extender la interfaz Message para incluir información de la respuesta
-interface ExtendedMessage extends Message {
-    geminiResponse?: GeminiResponse; // Información adicional de la respuesta
-}
+
 
 interface BasicPromptStore {
     geminiWriting: boolean; 
-    messages: ExtendedMessage[];
+    messages: Message[];
     conversationId: string; 
     lastResponseType?: string; // Tipo de la última respuesta
     lastResponseSuccess?: boolean; // Estado de éxito de la última respuesta
@@ -20,14 +17,29 @@ interface BasicPromptStore {
     setConversationId: (conversationId: string) => void;
 }
 
-const createMessage = (text: string, sender: 'user' | 'gemini', geminiResponse?: GeminiResponseMarkdown): ExtendedMessage => {
-    return {
-        id: uuid.v4(),
-        text: text,
-        createdAt: new Date(),
-        sender: sender,
-        type: "text",
+const createMessage = (text: string, sender: 'user' | 'gemini'): Message => {
+  console.log("text message: ", text)
+  
+  let formattedText = text;
+  
+  // Si el texto es un JSON stringificado, parsearlo
+  try {
+    const parsedResponse = JSON.parse(text);
+    if (parsedResponse.result) {
+      formattedText = parsedResponse.result;
     }
+  } catch (error) {
+    // Si no es JSON válido, usar el texto original
+    console.log("No es JSON válido, usando texto original");
+  }
+  
+  return {
+    id: uuid.v4(),
+    text: formattedText, // Usar el texto formateado
+    createdAt: new Date(),
+    sender: sender,
+    type: "text",
+  }
 }
 
 export const useBasicPromptStore = create<BasicPromptStore>((set) => ({
@@ -47,10 +59,11 @@ export const useBasicPromptStore = create<BasicPromptStore>((set) => ({
       messages: [...state.messages, userMessage]
     }));
 
+    // Gemini Message
     try {
-      const geminiResponse: GeminiResponseMarkdown = await actionBasicPrompt(text, conversationId);
+      const geminiResponse: Message = await actionBasicPrompt(text, conversationId);
       // Crear mensaje con la respuesta completa
-      const geminiMessage = createMessage(geminiResponse.result, 'gemini');
+      const geminiMessage = createMessage(JSON.stringify(geminiResponse), 'gemini');
       
       set(state => ({
         geminiWriting: false,

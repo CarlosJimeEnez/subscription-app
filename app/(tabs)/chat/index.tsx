@@ -109,6 +109,7 @@ const ChatScreen = () => {
                                 <UserMessage key={`user-${msg.id}`} msg={msg} />
                             ) : (
                                 <GeminiMessage key={`gemini-${msg.id}`} msg={msg} />
+
                             )
                         ))
                     ) : (
