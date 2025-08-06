@@ -65,14 +65,12 @@ interface GeminiMessageProps {
 }
 
 const GeminiMessage: React.FC<GeminiMessageProps> = ({ msg }) => {
-    console.log('mensaje desde gemini', msg);
     // Si no hay información de respuesta, mostrar mensaje normal
     return (
-        <View>
+        <View className="bg-gray-800 self-start rounded-lg p-5 mb-7 max-w-sm">
             <Markdown style={baseMarkdownStyles}>{msg.text}</Markdown>
         </View>
     )
-
 };
 
 export default GeminiMessage;

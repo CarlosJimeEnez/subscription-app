@@ -18,24 +18,27 @@ interface BasicPromptStore {
 }
 
 const createMessage = (text: string, sender: 'user' | 'gemini'): Message => {
-  console.log("text message: ", text)
-  
   let formattedText = text;
+  console.log("Formated Text", formattedText);
   
-  // Si el texto es un JSON stringificado, parsearlo
-  try {
-    const parsedResponse = JSON.parse(text);
-    if (parsedResponse.result) {
-      formattedText = parsedResponse.result;
+  // Si el sender es gemini, siempre intentar parsear el JSON y extraer el result
+  if (sender === 'gemini') {
+    try {
+      const parsedResponse = JSON.parse(text);
+      if (parsedResponse.result) {
+        formattedText = parsedResponse.result;
+        console.log("JSON válido, usando resultado:", formattedText);
+      }
+    } catch (error) {
+      // Si no es JSON válido, usar el texto original
+      console.log("No es JSON válido, usando texto original");
     }
-  } catch (error) {
-    // Si no es JSON válido, usar el texto original
-    console.log("No es JSON válido, usando texto original");
   }
+  // Para mensajes de usuario, usar el texto tal como viene
   
   return {
     id: uuid.v4(),
-    text: formattedText, // Usar el texto formateado
+    text: formattedText, // Usar el texto formateado (solo el contenido del result para gemini)
     createdAt: new Date(),
     sender: sender,
     type: "text",
@@ -61,9 +64,9 @@ export const useBasicPromptStore = create<BasicPromptStore>((set) => ({
 
     // Gemini Message
     try {
-      const geminiResponse: Message = await actionBasicPrompt(text, conversationId);
-      // Crear mensaje con la respuesta completa
-      const geminiMessage = createMessage(JSON.stringify(geminiResponse), 'gemini');
+      const geminiResponse: string = await actionBasicPrompt(text, conversationId);
+      // Pasar directamente la respuesta sin JSON.stringify
+      const geminiMessage = createMessage(geminiResponse, 'gemini');
       
       set(state => ({
         geminiWriting: false,

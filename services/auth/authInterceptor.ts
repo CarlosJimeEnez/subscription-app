@@ -13,7 +13,7 @@ export const setupAuthInterceptor = (axiosInstance: AxiosInstance, getTokenFn: (
       try {
         // Obtener token fresco para cada solicitud usando la función proporcionada
         const token = await getTokenFn();
-        console.log('Token obtenido:', token ? 'Token válido' : 'Token nulo');
+        
         // Añadir más información para depuración
         if (token) {
           config.headers['Authorization'] = `Bearer ${token}`;
@@ -44,7 +44,6 @@ export const setupAuthInterceptor = (axiosInstance: AxiosInstance, getTokenFn: (
           const newToken = await getTokenFn();
           
           if (newToken) {
-            console.log('Nuevo token obtenido, reintentando solicitud...');
             // Actualizar el token en la solicitud original
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
             // Reintentar la solicitud original con el nuevo token
