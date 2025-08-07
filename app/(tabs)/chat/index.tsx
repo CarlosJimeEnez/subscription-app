@@ -1,6 +1,6 @@
 import AnimacionPensando from '@/components/chat/AnimacionPensando';
 import GeminiMessage from '@/components/chat/GeminiMessage';
-import MessageBlueprint from '@/components/chat/MessageBlueprint';
+import MessageBlueprintArea from '@/components/chat/MessageBlueprintArea';
 import NuevoChat from '@/components/chat/NuevoChat';
 import UserMessage from '@/components/chat/UserMessage';
 import useChat from '@/hooks/useChat';
@@ -68,9 +68,8 @@ const ChatScreen = () => {
 
         try {
             const textToSend = text.trim();
-            setText('');
-            await addMessage(textToSend); // Ya no necesitamos pasar el token
-            // Pequeño delay para asegurar que el mensaje se renderice antes de scroll
+            setText(''); // Al limpiar el texto, el TextInput automáticamente volverá a altura 40
+            await addMessage(textToSend);
             setTimeout(() => scrollToBottom(), 100);
         } catch (error) {
             console.error('Error al enviar mensaje:', error);
@@ -86,9 +85,9 @@ const ChatScreen = () => {
             >
                 {/* Header */}
                 <View className="p-6  items-center">
-                    <Text className="text-2xl font-bold text-white">ChatBot Assistant</Text>
+                    <Text className="text-2xl font-bold text-white">Chat</Text>
                     <Text className="text-sm text-gray-400 mt-1">
-                        Tu asistente de IA personal. Pregúntame lo que quieras.
+                        Tu asistente de IA personal sobre tus Gastos
                     </Text>
                 </View>
 
@@ -123,40 +122,8 @@ const ChatScreen = () => {
                 </ScrollView>
 
                 {/* Fixed MessageBlueprint Area */}
-                <View className=" " style={{ zIndex: 10 }}>
-                    <ScrollView 
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingHorizontal: 12,
-                            paddingVertical: 1,
-                            alignItems: 'center'
-                        }}
-                        style={{
-                            minHeight: 80, // Cambiar de maxHeight a minHeight
-                            backgroundColor: '#111827' // Asegurar fondo visible
-                        }}
-                    >
-                        <View className='flex-row w-full pe-24'>
-                            <MessageBlueprint
-                                title="Nueva Compra"
-                                onPress={() => setText('Nueva compra de (  ) por (  )')}
-                                variant="default"
-                            />
-                            <View style={{ width: 8 }} />
-                            <MessageBlueprint
-                                title="Análisis de Gastos"
-                                onPress={() => setText('Analiza mis gastos mensuales')}
-                                variant="default"
-                            />
-                            <View style={{ width: 8 }} />
-                            <MessageBlueprint
-                                title="Gasto en Comida"
-                                onPress={() => setText('Nuevo gasto en comida por ')}
-                                variant="default"
-                            />
-                        </View>
-                    </ScrollView>
+                <View className={`${messages.length > 0 ? "hidden" : ""}`}>
+                     <MessageBlueprintArea onMessageSelect={setText} />
                 </View>
 
                 {/* Input Area */}
@@ -179,13 +146,14 @@ const ChatScreen = () => {
                             multiline
                             style={{
                                 minHeight: 40,
-                                maxHeight: 120, // Limitar la altura máxima
-                                height: Math.max(40, textInputHeight)
+                                maxHeight: 120,
+                                height: text === '' ? 20 : Math.max(40, textInputHeight) // Forzar altura 40 cuando no hay texto
                             }}
                             onContentSizeChange={(event) => {
-                                setTextInputHeight(event.nativeEvent.contentSize.height);
-                                // También hacer scroll cuando crece el input
-                                scrollToBottom();
+                                if (text !== '') { // Solo actualizar altura si hay texto
+                                    setTextInputHeight(event.nativeEvent.contentSize.height);
+                                    scrollToBottom();
+                                }
                             }}
                         />
                         <TouchableOpacity onPress={handleSendMessage} className="p-2 bg-[#177e55] rounded-lg m-2">
