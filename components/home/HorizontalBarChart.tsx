@@ -1,6 +1,6 @@
-import { Calendar } from "lucide-react-native";
+import { formatMonth } from "@/helpers/formatDay";
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { AppState, Pressable, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 
 interface Props {
@@ -21,8 +21,6 @@ const HorizontalBarChart = ({ className }: Props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [totalSpent, setTotalSpent] = useState(0);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [tempDate, setTempDate] = useState(new Date());
 
     // Función para simular llamada al backend
     const fetchSpendingData = async (date: Date): Promise<SpendingData[]> => {
@@ -84,26 +82,32 @@ const HorizontalBarChart = ({ className }: Props) => {
         loadData();
     }, [selectedDate]);
 
-    const formatDate = (date: Date) => {
-        const months = ['January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'];
-        return `${months[date.getMonth()]} ${date.getFullYear()}`;
+
+    // Cuando la aplicaion entra en primer plano actualiza la fecha a la actual
+    useEffect(() => {
+        const handleAppStateChange = (nextAppState: string) => {
+            if (nextAppState === 'active') {
+                setSelectedDate(new Date());
+            }
+        };
+        
+        const subscription = AppState.addEventListener('change', handleAppStateChange);
+        return () => subscription?.remove();
+    }, []);
+
+    // Funciones para cambiar el mes
+    const goToPreviousMonth = () => {
+        const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1);
+        setSelectedDate(newDate);
     };
 
-    const handleDateChange = (event: any, date?: Date) => {
-        if (date) {
-            setTempDate(date);
-        }
+    const goToCurrentMonth = () => {
+        setSelectedDate(new Date());
     };
 
-    const handleDateConfirm = () => {
-        setSelectedDate(tempDate);
-        setShowDatePicker(false);
-    };
-
-    const handleDateCancel = () => {
-        setTempDate(selectedDate);
-        setShowDatePicker(false);
+    const goToNextMonth = () => {
+        const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1);
+        setSelectedDate(newDate);
     };
 
     return (
@@ -127,7 +131,7 @@ const HorizontalBarChart = ({ className }: Props) => {
                             centerLabelComponent={() => (
                                 <View className="items-center">
                                     {/* DatePicker personalizado */}
-                                    <TouchableOpacity
+                                    {/* <TouchableOpacity
                                         onPress={() => setShowDatePicker(true)}
                                         className="flex-row items-center justify-center "
                                     >
@@ -135,7 +139,8 @@ const HorizontalBarChart = ({ className }: Props) => {
                                             {formatDate(selectedDate)}
                                         </Text>
                                         <Calendar size={12} color="#9CA3AF" />
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
+                                   
                                     <Text className="text-text text-2xl font-bold">
                                         ${totalSpent.toLocaleString()}
                                     </Text>
@@ -144,11 +149,41 @@ const HorizontalBarChart = ({ className }: Props) => {
                         />
                     </View>
 
-                    {/* Botones de período */}
+                    {/* Botones de período - ACTUALIZADOS */}
                     <View className="flex-row mt-6 space-x-4">
-                        <Text className="text-gray-400 text-base">Week</Text>
-                        <Text className="text-white text-base font-semibold underline">Month</Text>
-                        <Text className="text-gray-400 text-base">Year</Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            <View className="flex-row space-x-3">
+                                {/* Mes anterior */}
+                                <Pressable 
+                                    onPress={goToPreviousMonth}
+                                    className="flex-row items-center justify-center p-3 mx-1 rounded-full min-w-[120px] bg-secondary"
+                                >
+                                    <Text className="text-text text-lg font-bold">
+                                        {formatMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1))}
+                                    </Text>
+                                </Pressable>
+                                
+                                {/* Mes actual - SIEMPRE DESTACADO */}
+                                <Pressable 
+                                    onPress={goToCurrentMonth}
+                                    className="flex-row items-center justify-center p-3 mx-1 rounded-full min-w-[120px] bg-accent"
+                                >
+                                    <Text className="text-white text-lg font-bold">
+                                        {formatMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1))}
+                                    </Text>
+                                </Pressable>
+                                
+                                {/* Mes siguiente */}
+                                <Pressable 
+                                    onPress={goToNextMonth}
+                                    className="flex-row items-center justify-center p-3 mx-1 rounded-full min-w-[120px] bg-secondary"
+                                >
+                                    <Text className="text-text text-lg font-bold">
+                                        {formatMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1))}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </ScrollView>
                     </View>
 
                     {/* Leyenda */}
@@ -168,7 +203,6 @@ const HorizontalBarChart = ({ className }: Props) => {
                     </View>
                 </View>
             )}
-
         </View>
     );
 };

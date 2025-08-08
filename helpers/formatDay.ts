@@ -6,6 +6,13 @@ export const formatDay = (date: Date) => {
     })
 }
 
+export const formatMonth = (date: Date) => {
+    return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long'
+    }).replace(' de', '')
+}
+
 // Days remaining until the payment date
 export const daysRamain = (paymentDate: string) => {
     const date = new Date(paymentDate)
