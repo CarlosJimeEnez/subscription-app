@@ -23,11 +23,7 @@ const HorizontalBarChart = ({ className }: Props) => {
     
     // Datos fijos como en el ejemplo de gifted-charts
     const spendingData: SpendingData[] = [
-        { value: 54, color: '#177AD5', text: '54%', label: 'Entretenimiento' },
-        { value: 30, color: '#79D2DE', text: '30%', label: 'Comida' },
-        { value: 26, color: '#ED6665', text: '26%', label: 'Transporte' },
-        { value: 20, color: '#F59E0B', text: '20%', label: 'Servicios' },
-        { value: 15, color: '#8B5CF6', text: '15%', label: 'Compras' }
+        { value: 1, color: '#177AD5', text: '12%', label: 'Entretenimiento' },
     ];
     
     // Total fijo
@@ -67,12 +63,7 @@ const HorizontalBarChart = ({ className }: Props) => {
                 <View className="relative">
                     <PieChart
                         data={spendingData}
-                        showText
-                        textColor="black"
                         radius={110}
-                        textSize={16}
-                        
-                        textBackgroundRadius={22}
                         donut
                         innerRadius={80}
                         innerCircleColor={"#101323"}
