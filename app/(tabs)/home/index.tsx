@@ -28,14 +28,15 @@ const home = () => {
             </View>
           </View>
           <Text className='text-text text-2xl font-bold'>Resumen</Text>
+          {/* <BarChart data={barData} />; */}
+          <HorizontalBarChart className='px-5 mt-6' />
+          
           <View className='flex-row flex-1 items-center justify-between gap-4 '>
             <ShownCard title="Active Subscriptions" className='h-full' value="4" />
             <ShownCard title="Total Spent This Month" className='h-full' value="$45.96" />
           </View>
         </View>
 
-        {/* <BarChart data={barData} />; */}
-        <HorizontalBarChart className='px-5 mt-6' />
 
         {/* List Vertical de Upcoming Bills */}
         <View className='mt-9 m-6 p-3 pb-6 border border-gray-700  rounded-xl'>
