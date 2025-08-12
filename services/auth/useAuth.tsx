@@ -1,4 +1,4 @@
-import geminiApi from '@/actions/gemini.api';
+import geminiApi from '@/actions/gemini/gemini.api';
 import { useAuth as useClerkAuth } from '@clerk/clerk-expo';
 import { useEffect } from 'react';
 import { setupAuthInterceptor } from './authInterceptor';
@@ -15,6 +15,7 @@ export const useAuth = () => {
     // Configurar el interceptor de autenticación cuando el componente se monta
     // Pasamos la función getToken del hook de Clerk
     if (clerkAuth.getToken) {
+      // Configurar para geminiApi
       setupAuthInterceptor(geminiApi, clerkAuth.getToken);
     }
   }, [clerkAuth.getToken]);

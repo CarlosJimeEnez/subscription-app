@@ -1,4 +1,4 @@
-import geminiApi from "../gemini.api";
+import geminiApi from "./gemini.api";
 
 export const actionBasicPrompt = async (prompt: string, conversationId: string): Promise<string> => {
     try {

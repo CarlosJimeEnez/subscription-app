@@ -1,18 +1,28 @@
+import { ExpensesContainer } from '@/components/home';
 import FAB from '@/components/home/FAB';
 import HorizontalBarChart from '@/components/home/HorizontalBarChart';
 import ShownCard from '@/components/home/ShownCard';
 import UserGreeting from '@/components/home/UserGreeting';
 import ListVertical from '@/components/shared/ListVertical';
+import useExpenses from '@/hooks/expenses/useExpenses';
 import useHome from '@/hooks/useSubscriptions';
 import { Bell } from 'lucide-react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth } from '@clerk/clerk-expo';
+import { setupExpensesAuth } from '../../../actions/expenses/expenses.api';
 
-const home = () => {
-  const safeArea = useSafeAreaInsets()
-  const { subscriptions } = useHome()
+export default function HomeScreen() {
+  const { getToken } = useAuth();
+  const safeArea = useSafeAreaInsets();
+  const { subscriptions } = useHome();
+  const { expenses } = useExpenses();
 
+  // Configurar autenticación para expenses API
+  useEffect(() => {
+    setupExpensesAuth(getToken);
+  }, [getToken]);
 
   return (
     <View className='flex-1' style={{ paddingTop: safeArea.top + 20, backgroundColor: "#101323" }}>
@@ -30,29 +40,33 @@ const home = () => {
           <Text className='text-text text-2xl font-bold'>Resumen</Text>
           {/* <BarChart data={barData} />; */}
           <HorizontalBarChart className='px-5 mt-6' />
-          
+
           <View className='flex-row flex-1 items-center justify-between gap-4 '>
             <ShownCard title="Active Subscriptions" className='h-full' value="4" />
             <ShownCard title="Total Spent This Month" className='h-full' value="$45.96" />
           </View>
         </View>
 
-
         {/* List Vertical de Upcoming Bills */}
-        <View className='mt-9 m-6 p-3 pb-6 border border-gray-700  rounded-xl'>
+        <View className='mt-9 mx-6 p-3 border border-gray-700  rounded-xl'>
           <Text className='text-text text-2xl font-bold mt-3 '>Upcoming Bills (5)</Text>
           {
             subscriptions.length != 0 ? (
               <ListVertical subscriptions={subscriptions} />
             ) : (
-              <Text className='text-text text-2xl font-bold mt-3 '>No upcoming bills</Text>
+              <Text className='text-text text-2xl font-bold mt-3 '>No hay suscripciones activas</Text>
             )
           }
         </View>
+
+        {/* Movimientos */}
+        <ExpensesContainer 
+          className='mt-1 mx-6'
+          title='Movimientos'
+          maxItems={5}
+        />
       </ScrollView>
       <FAB />
     </View>
-  )
+  );
 }
-
-export default home
