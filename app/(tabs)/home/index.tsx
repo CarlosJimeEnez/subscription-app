@@ -6,11 +6,11 @@ import UserGreeting from '@/components/home/UserGreeting';
 import ListVertical from '@/components/shared/ListVertical';
 import useExpenses from '@/hooks/expenses/useExpenses';
 import useHome from '@/hooks/useSubscriptions';
+import { useAuth } from '@clerk/clerk-expo';
 import { Bell } from 'lucide-react-native';
 import React, { useEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAuth } from '@clerk/clerk-expo';
 import { setupExpensesAuth } from '../../../actions/expenses/expenses.api';
 
 export default function HomeScreen() {
@@ -19,6 +19,10 @@ export default function HomeScreen() {
   const { subscriptions } = useHome();
   const { expenses } = useExpenses();
 
+  const handleRefresh = () => {
+    expenses.refetch();
+  };
+
   // Configurar autenticación para expenses API
   useEffect(() => {
     setupExpensesAuth(getToken);
@@ -26,7 +30,15 @@ export default function HomeScreen() {
 
   return (
     <View className='flex-1' style={{ paddingTop: safeArea.top + 20, backgroundColor: "#101323" }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={expenses.isRefetching}
+            onRefresh={handleRefresh}
+            tintColor="#3B82F6"
+          />
+        }
+      >
         <View className='mt-5 px-5 flex-1 '>
           <View className='flex-row items-center justify-between pb-4'>
             <UserGreeting />
@@ -60,7 +72,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Movimientos */}
-        <ExpensesContainer 
+        <ExpensesContainer
           className='mt-1 mx-6'
           title='Movimientos'
           maxItems={5}

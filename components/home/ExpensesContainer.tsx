@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, ScrollView, RefreshControl } from 'react-native';
 import { useExpenses } from '@/hooks/expenses/useExpenses';
 import { Expense } from '@/interface/expense.interface';
+import React from 'react';
+import { ScrollView, Text, View } from 'react-native';
 import ExpensesList from './ExpensesList';
 
 interface Props {
@@ -35,9 +35,12 @@ const ExpensesContainer = ({
     <View className={className}>
       {showTitle && (
         <View className="flex-row items-center justify-between mb-4">
+          
           <Text className="text-text text-2xl font-bold">
             {title}
           </Text>
+
+          {/* Numero de movimiento */}
           {expenses.data && expenses.data.length > 0 && (
             <Text className="text-gray-400 text-sm">
               {expenses.data.length} movimiento{expenses.data.length !== 1 ? 's' : ''}
@@ -61,14 +64,6 @@ const ExpensesContainer = ({
   if (scrollable) {
     return (
       <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={expenses.isRefetching}
-            onRefresh={handleRefresh}
-            tintColor="#3B82F6"
-          />
-        }
       >
         {content}
       </ScrollView>
