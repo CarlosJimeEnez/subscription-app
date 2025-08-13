@@ -1,5 +1,7 @@
 import { formatDay } from '@/helpers/formatDay';
 import { FormatPrice } from '@/helpers/formatPrice';
+import { getCategoryColor } from '@/helpers/getCategoryColors';
+import { getCategoryIcon } from '@/helpers/getCategoryIcon';
 import { Expense } from '@/interface/expense.interface';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -13,6 +15,9 @@ interface Props {
 }
 
 const ExpenseItem = ({ expense, onPress, className }: Props) => {
+  const categoryColor = getCategoryColor(expense.category)
+  const categoryIcon = getCategoryIcon(expense.category)
+  
   const handlePress = () => {
     router.push(`/expense/${expense.id}` as any);
   };
@@ -25,7 +30,7 @@ const ExpenseItem = ({ expense, onPress, className }: Props) => {
       {/* Icono de categoría */}
       <View className="flex-row items-center flex-1">
         <View className="w-10 h-10 bg-accent rounded-full items-center justify-center mr-3">
-          <Ionicons name="apps-outline" size={20} color="white" />
+          <Ionicons name={categoryIcon} size={20} color="white" />
         </View>
         
         {/* Información del gasto */}
@@ -49,11 +54,6 @@ const ExpenseItem = ({ expense, onPress, className }: Props) => {
         <Text className="text-text text-lg font-bold">
           {FormatPrice.format(expense.amount)}
         </Text>
-        {/* {expense.description && (
-          <Text className="text-gray-400 text-xs" numberOfLines={1}>
-            {expense.description}
-          </Text>
-        )} */}
       </View>
     </Pressable>
   );

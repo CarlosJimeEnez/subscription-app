@@ -1,5 +1,5 @@
 export const formatDay = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('en-ES', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'

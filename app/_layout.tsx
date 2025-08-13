@@ -46,6 +46,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(auth)" />
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen name="subscription/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} />
+                <Stack.Screen name="expense/[id]" options={{ headerShown: true, headerTransparent: true, headerTitle: '', headerTintColor: '#fff' }} />
                 <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
               </Stack>
               <StatusBar style="light" />

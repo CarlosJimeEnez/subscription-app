@@ -1,6 +1,5 @@
 import { ExpensesContainer } from '@/components/home';
 import FAB from '@/components/home/FAB';
-import HorizontalBarChart from '@/components/home/HorizontalBarChart';
 import ShownCard from '@/components/home/ShownCard';
 import UserGreeting from '@/components/home/UserGreeting';
 import ListVertical from '@/components/shared/ListVertical';
@@ -52,8 +51,9 @@ export default function HomeScreen() {
             </View>
           </View>
           <Text className='text-text text-2xl font-bold'>Resumen</Text>
-          {/* <BarChart data={barData} />; */}
-          <HorizontalBarChart className='px-5 mt-6' />
+          
+          {/* <BarChart data={barData} />;
+          <HorizontalBarChart className='px-5 mt-6' /> */}
 
           <View className='flex-row flex-1 items-center justify-between gap-4 '>
             <ShownCard title="Active Subscriptions" className='h-full' value="4" />

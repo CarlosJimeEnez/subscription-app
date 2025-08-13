@@ -1,38 +1,40 @@
-import AnimacionPensando from '@/components/chat/AnimacionPensando'
 import ErrorLoadingGasto from '@/components/gastos/ErrorLoadingGasto'
+import ExpenseDetailComponent from '@/components/gastos/ExpenseDetailComponent'
+import LoadingExpenses from '@/components/home/LoadingExpenses'
 import { useExpense } from '@/hooks/expenses/useExpenses'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { View } from 'react-native'
 
 const ExpenseDetail = () => {
-    const { top } = useSafeAreaInsets();
-    const { id } = useLocalSearchParams<{ id: string }>() 
+    const { id } = useLocalSearchParams<{ id: string }>()
     const { expense } = useExpense(id)
 
     if (expense.isLoading) {
         return (
             <View className="flex-1 justify-center items-center bg-background">
-                <AnimacionPensando text="Cargando gasto" color="#3B82F6" size={12} />
+                <LoadingExpenses message="Cargando gasto..." />
             </View>
         )
     }
 
     if (expense.error) {
         return (
-            <ErrorLoadingGasto />
+            <View className="flex-1 justify-center items-center bg-background">
+                <ErrorLoadingGasto />
+            </View>
         )
     }
 
-    return (
-        <ScrollView>
-            <View style={{ paddingTop: top }}>
-                <Text className='text-text'>Expense Detail</Text>
-                <Text className='text-text'>{expense.data?.name}</Text>
+    if (!expense.data) {
+        return (
+            <View className="flex-1 justify-center items-center bg-background">
+                <LoadingExpenses message="Gasto no encontrado..." />
             </View>
-        </ScrollView>
-    )
+        )
+    }
+
+    return <ExpenseDetailComponent expense={expense.data} />
 }
 
 export default ExpenseDetail
