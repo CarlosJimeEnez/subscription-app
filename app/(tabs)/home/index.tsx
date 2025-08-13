@@ -14,10 +14,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setupExpensesAuth } from '../../../actions/expenses/expenses.api';
 
 export default function HomeScreen() {
-  const { getToken } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const safeArea = useSafeAreaInsets();
   const { subscriptions } = useHome();
-  const { expenses } = useExpenses();
+  const { expenses } = useExpenses(isLoaded && !!isSignedIn);
 
   const handleRefresh = () => {
     expenses.refetch();
@@ -25,8 +25,10 @@ export default function HomeScreen() {
 
   // Configurar autenticación para expenses API
   useEffect(() => {
-    setupExpensesAuth(getToken);
-  }, [getToken]);
+    if (isLoaded) {
+      setupExpensesAuth(getToken);
+    }
+  }, [getToken, isLoaded]);
 
   return (
     <View className='flex-1' style={{ paddingTop: safeArea.top + 20, backgroundColor: "#101323" }}>
@@ -61,7 +63,7 @@ export default function HomeScreen() {
 
         {/* List Vertical de Upcoming Bills */}
         <View className='mt-9 mx-6 p-3 border border-gray-700  rounded-xl'>
-          <Text className='text-text text-2xl font-bold mt-3 '>Upcoming Bills (5)</Text>
+          <Text className='text-text text-2xl font-bold mt-3 '>Suscripciones activas</Text>
           {
             subscriptions.length != 0 ? (
               <ListVertical subscriptions={subscriptions} />
@@ -73,7 +75,7 @@ export default function HomeScreen() {
 
         {/* Movimientos */}
         <ExpensesContainer
-          className='mt-1 mx-6'
+          className='mt-5 mx-6'
           title='Movimientos'
           maxItems={5}
         />

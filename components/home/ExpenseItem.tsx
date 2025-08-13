@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { Expense } from '@/interface/expense.interface';
-import { FormatPrice } from '@/helpers/formatPrice';
 import { formatDay } from '@/helpers/formatDay';
+import { FormatPrice } from '@/helpers/formatPrice';
+import { Expense } from '@/interface/expense.interface';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import React from 'react';
+import { Pressable, Text, View } from 'react-native';
 
 interface Props {
   expense: Expense;
@@ -13,7 +14,7 @@ interface Props {
 
 const ExpenseItem = ({ expense, onPress, className }: Props) => {
   const handlePress = () => {
-    onPress?.(expense);
+    router.push(`/expense/${expense.id}` as any);
   };
 
   return (
@@ -48,11 +49,11 @@ const ExpenseItem = ({ expense, onPress, className }: Props) => {
         <Text className="text-text text-lg font-bold">
           {FormatPrice.format(expense.amount)}
         </Text>
-        {expense.description && (
+        {/* {expense.description && (
           <Text className="text-gray-400 text-xs" numberOfLines={1}>
             {expense.description}
           </Text>
-        )}
+        )} */}
       </View>
     </Pressable>
   );
