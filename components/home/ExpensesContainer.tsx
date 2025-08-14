@@ -1,60 +1,67 @@
-import { useExpenses } from '@/hooks/expenses/useExpenses';
 import { Expense } from '@/interface/expense.interface';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import ExpensesList from './ExpensesList';
 
 interface Props {
+  expenses: Expense[];
   className?: string;
   title?: string;
   showTitle?: boolean;
   onExpensePress?: (expense: Expense) => void;
   maxItems?: number;
   scrollable?: boolean;
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: any;
 }
 
 const ExpensesContainer = ({ 
+  expenses,
   className,
   title = 'Movimientos Recientes',
   showTitle = true,
   onExpensePress,
   maxItems,
-  scrollable = true
+  scrollable = true,
+  isLoading,
+  isError,
+  error
 }: Props) => {
-  const { expenses } = useExpenses();
 
-  const handleRefresh = () => {
-    expenses.refetch();
-  };
-
-  const limitedData = maxItems && expenses.data 
-    ? expenses.data.slice(0, maxItems)
-    : expenses.data;
+  const limitedData = maxItems && expenses
+    ? expenses.slice(0, maxItems)
+    : expenses;
 
   const content = (
     <View className={className}>
       {showTitle && (
         <View className="flex-row items-center justify-between mb-4">
-          
           <Text className="text-text text-2xl font-bold">
             {title}
           </Text>
 
           {/* Numero de movimiento */}
-          {expenses.data && expenses.data.length > 0 && (
+          {expenses && expenses.length > 0 && (
             <Text className="text-gray-400 text-sm">
-              {expenses.data.length} movimiento{expenses.data.length !== 1 ? 's' : ''}
+              {expenses.length} movimiento{expenses.length !== 1 ? 's' : ''}
             </Text>
           )}
         </View>
       )}
       
-      <ExpensesList className="" />
+      <ExpensesList 
+        className="" 
+        expenses={limitedData}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+      />
       
-      {maxItems && expenses.data && expenses.data.length > maxItems && (
+      {maxItems && expenses && expenses.length > maxItems && (
         <View className="mt-4 items-center">
           <Text className="text-accent text-sm font-medium">
-            Ver todos los movimientos ({expenses.data.length - maxItems} más)
+            Ver todos los movimientos ({expenses.length - maxItems} más)
           </Text>
         </View>
       )}
@@ -63,8 +70,7 @@ const ExpensesContainer = ({
 
   if (scrollable) {
     return (
-      <ScrollView
-      >
+      <ScrollView>
         {content}
       </ScrollView>
     );

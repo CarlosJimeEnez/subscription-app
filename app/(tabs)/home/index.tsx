@@ -74,9 +74,13 @@ export default function HomeScreen() {
 
         {/* Movimientos */}
         <ExpensesContainer
+          expenses={expenses.data || []}
           className='mt-5 mx-6'
           title='Movimientos'
           maxItems={5}
+          isLoading={expenses.isLoading}
+          isError={expenses.isError}
+          error={expenses.error}
         />
       </ScrollView>
       <FAB />

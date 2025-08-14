@@ -1,34 +1,35 @@
-import { useExpenses } from '@/hooks/expenses/useExpenses';
 import React from 'react';
 import { View } from 'react-native';
 import EmptyExpenses from './EmptyExpenses';
 import ErrorExpenses from './ErrorExpenses';
 import ExpenseItem from './ExpenseItem';
 import LoadingExpenses from './LoadingExpenses';
+import { Expense } from '@/interface/expense.interface';
 
 interface Props {
   className?: string;
+  expenses: Expense[];
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: any;
 }
 
-const ExpensesList = ({ className }: Props) => {
-  const { expenses } = useExpenses();
-  console.log(expenses);
-
-  if (expenses.isLoading) {
+const ExpensesList = ({ className, expenses, isLoading, isError, error }: Props) => {
+  if (isLoading) {
     return <LoadingExpenses />;
   }
 
-  if (expenses.isError) {
-    return <ErrorExpenses error={expenses.error} />;
+  if (isError) {
+    return <ErrorExpenses error={error} />;
   }
 
-  if (!expenses.data || expenses.data.length === 0) {
+  if (!expenses || expenses.length === 0) {
     return <EmptyExpenses />;
   }
 
   return (
     <View className={className}>
-      {expenses.data.map((expense) => (
+      {expenses.map((expense) => (
         <ExpenseItem key={expense.id} expense={expense} />
       ))}
     </View>
