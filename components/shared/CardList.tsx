@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import AccentText from './AccentText';
 
 interface CardListProps {
   id: string;
@@ -19,41 +18,35 @@ interface CardListProps {
 }
 
 const CardList = ({ id, title, subtitle, className, nextPaymentDate, category, billingCycle }: CardListProps) => {
-
-  const getIconName = getCategoryIcon(category)
+  const getIconName = getCategoryIcon(category);
+  const daysLeft = daysRamain(nextPaymentDate);
 
   return (
-    <Pressable onPress={() => router.push(`../subscription/${id}`)}>
-      <View className={`flex-row items-center gap-2 bg-primary px-2 py-1 rounded-2xl ${className}`}>
-        {/* Icon Container */}
-        <View className="flex w-14 h-16 shrink-0 items-center justify-center rounded-lg bg-[#21284a]">
-          <Ionicons name={getIconName} size={18} color="white" />
-        </View>
-
-        {/* Información */}
-        <View className="flex-1 flex-col justify-center">
-
-          {/* Nombre y Categoría */}
-          <View className='flex-row  items-start'>
-            <Text className="text-xl font-medium leading-normal text-text">{title}</Text>
+    <Pressable onPress={() => router.push(`../subscription/${id}`)} className="mb-3 px-3">
+      <View 
+        className={`rounded-2xl p-4 bg-secondary ${className}`}
+      >
+        {/* Header con icono y menú */}
+        <View className="flex-row justify-between items-start mb-4">
+          <View className="w-10 h-10 bg-white/20 rounded-full items-center justify-center">
+            <Ionicons name={getIconName} size={20} color="white" />
           </View>
-
-          <Text className='text-sm font-normal leading-normal text-[#c4cbe6]'>{billingCycle}</Text>
-
-          {/* Fecha de próxima factura */}
-          <View className='flex-row items-center gap-2 mt-1'>
-            <View className="flex-row items-center">
-              <View className="flex-row items-center gap-2">
-                <AccentText label={daysRamain(nextPaymentDate) > 0 ? `${daysRamain(nextPaymentDate)} days remaining` : ''} IonIconName='calendar-outline' />
-              </View>
-            </View>
-          </View>
+          <Ionicons name="ellipsis-horizontal" size={20} color="white" />
         </View>
 
-        {/* {Dinero} */}
-        <View className="flex-col items-end justify-center">
-          <Text className="text-xl font-medium leading-normal text-text">{FormatPrice.format(subtitle)}</Text>
+        {/* Título del servicio */}
+        <Text className="text-white text-lg font-bold mb-1">{title}</Text>
+        
+        {/* Precio */}
+        <View className="flex-row items-baseline mb-2">
+          <Text className="text-white text-2xl font-bold">{FormatPrice.format(subtitle)}</Text>
+          <Text className="text-white/70 text-sm ml-1">/{billingCycle === 'Monthly' ? 'month' : billingCycle === 'Yearly' ? 'year' : billingCycle.toLowerCase()}</Text>
         </View>
+        
+        {/* Días restantes */}
+        <Text className="text-white/80 text-sm">
+          {daysLeft > 0 ? `${daysLeft} days left` : 'Expired'}
+        </Text>
       </View>
     </Pressable>
   );
