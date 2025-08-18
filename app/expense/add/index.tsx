@@ -203,15 +203,7 @@ const AddExpense = () => {
             </ScrollView>
 
             {/* Bottom Buttons */}
-            <View className="flex-row px-5 pb-6 pt-4 bg-secondary border-t border-gray-200">
-
-                <Pressable
-                    onPress={handleSaveDraft}
-                    className="flex-1 mr-3 py-4 rounded-2xl border-2 border-gray-300 items-center"
-                >
-                    <Text className="text-gray-600 font-semibold text-base">Borrador</Text>
-                </Pressable>
-
+            <View className="flex-row px-5 pb-6 pt-4 bg-secondary">
                 <Pressable
                     onPress={handleAddExpense}
                     className="flex-1 ml-3 py-4 rounded-2xl bg-green-600 items-center"

@@ -2,7 +2,7 @@ import { ExpensesContainer } from '@/components/home';
 import FAB from '@/components/home/FAB';
 import UserGreeting from '@/components/home/UserGreeting';
 import ListVertical from '@/components/shared/ListVertical';
-import useExpenses from '@/hooks/expenses/useExpenses';
+import { useExpenses } from '@/hooks/expenses/useExpenses';
 import useHome from '@/hooks/useSubscriptions';
 import { useAuth } from '@clerk/clerk-expo';
 import { Bell } from 'lucide-react-native';

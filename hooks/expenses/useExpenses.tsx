@@ -27,4 +27,6 @@ export const useExpense = (id: string) => {
     }
 }
 
-export default useExpenses
+export const useCreateExpense = () => {
+    
+}
